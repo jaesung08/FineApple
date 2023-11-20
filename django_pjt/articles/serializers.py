@@ -18,6 +18,7 @@ class ArticleListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
         fields = '__all__'
+        
 
 
 # 상세 데이터에 대한 serializer
@@ -50,3 +51,4 @@ class ArticleSerializer(serializers.ModelSerializer):
         # all: 전체필드
         # => 역참조시 필요로 하는 'comment_set'도 포함되어있다
         fields = '__all__'
+        read_only_fields = ('user', )

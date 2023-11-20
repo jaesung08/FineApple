@@ -13,13 +13,17 @@ def convert_currency(request):
     if 0 <= today.weekday() <= 4 and today.hour < 11:
         # 월요일이면 전주 금요일로 설정, 그렇지 않으면 어제로 설정
         yesterday = today - timedelta(days=(today.weekday() + 2) % 7) if today.weekday() != 0 else today - timedelta(days=3)
-    # 11시 이후이거나 주말인 경우
-    else:
+    # 주말인 경우
+    elif today.weekday() == 5 or today.weekday() == 6 :
         # 토요일이나 일요일이면 어제나 엊그제 중에 금요일로 설정
         yesterday = today - timedelta(days=1) if today.weekday() == 5 else today - timedelta(days=2)
-    
+    # 11시 이후되면 그냥 가져오기
+    else :
+        yesterday = today 
+        
     api_key = 'TRLP98UbzQOqhFAAdzuA6gqLSfHOwrHF'
     date = yesterday.strftime('%Y%m%d')
+    print(date)
     url = f'https://www.koreaexim.go.kr/site/program/financial/exchangeJSON'
 
     params = {

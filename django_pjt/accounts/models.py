@@ -4,7 +4,7 @@ from allauth.account.adapter import DefaultAccountAdapter
 
 # Create your models here.
 class User(AbstractUser):
-    nickname = models.TextField()
+    nickname = models.TextField(blank=False)
     age = models.IntegerField(blank=True, null=True)
     money = models.IntegerField(blank=True, null=True)
     salary = models.IntegerField(blank=True, null=True)

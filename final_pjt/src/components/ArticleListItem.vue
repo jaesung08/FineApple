@@ -3,6 +3,7 @@
       <p>{{ article.id }}</p>
       <p>제목 : {{ article.title }}</p>
       <p>내용 : {{ article.content }}</p>
+      <p>조회수 </p>
       <RouterLink :to = "{name:'DetailView', params: {id: article.id}}">
         [상세정보]
       </RouterLink>

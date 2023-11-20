@@ -4,6 +4,7 @@ from allauth.account.adapter import get_adapter
 from django.core.exceptions import ValidationError as DjangoValidationError
 from .models import User
 from dj_rest_auth.serializers import UserDetailsSerializer
+
 class CustomRegisterSerializer(RegisterSerializer):
     # 회원가입 시 추가로 필요한 필드들을 모두 정의
     # 나머지 필드들은 RegisterSerizalizer 에 있음

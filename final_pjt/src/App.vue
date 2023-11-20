@@ -7,8 +7,14 @@
         <RouterLink to="/bankmap">은행 지도</RouterLink>
         <RouterLink to="/financialproducts">예적금비교</RouterLink>
         <RouterLink to="/article">게시판</RouterLink>
-        
-
+        <div v-if="!store.isLogin">
+          <RouterLink :to="{name: 'SignUpView'}">회원가입</RouterLink> | 
+          <RouterLink :to="{name: 'LogInView'}">로그인</RouterLink>
+        </div>
+        <div v-else>
+          <RouterLink :to="{name: 'ProfileView'}">프로필</RouterLink> | 
+          <button @click="logOut">로그아웃</button>
+        </div>
       </nav>
     </div>
   </header>
@@ -16,7 +22,10 @@
 </template>
 
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { useCounterStore } from '@/stores/counter';
+
+const store = useCounterStore();
+
 </script>
 
 <style scoped>

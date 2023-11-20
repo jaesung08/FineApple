@@ -8,15 +8,18 @@ from rest_framework import status
 
 ### USER 정보 수정 하는 함수 만들기
 
-@api_view(['PUT'])
+@api_view(['PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
-
 def user_profile_edit(request):
     user_profile = get_object_or_404(User, user=request.user)
-    serializer = UserProfileSerializer(user_profile, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
+    if request.method == 'PUT':
+        serializer = UserProfileSerializer(user_profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+    elif request.method == 'DELETE':
+        user_profile.delete()
+        return Response({'detail': 'User profile deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

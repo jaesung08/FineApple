@@ -6,6 +6,10 @@ import MapView4 from '../views/MapView4.vue'
 import FinancialProductView from '../views/FinancialProductView.vue'
 import DetailView from '@/views/DetailView.vue'
 import CreateView from '@/views/CreateView.vue'
+import SignUpView from '@/views/SignUpView.vue'
+import LogInView from '@/views/LogInView.vue'
+import ProfileView from '@/views/ProfileView.vue'
+import { useCounterStore } from '../stores/counter'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +49,21 @@ const router = createRouter({
       name: 'financialproducts',
       component: FinancialProductView
     },
+    {
+      path: '/signup',
+      name: 'SignUpView',
+      component: SignUpView
+    },
+    {
+      path: '/login',
+      name: 'LogInView',
+      component: LogInView
+    },
+    {
+      path: '/profile',
+      name: 'ProfileView',
+      component: ProfileView
+    }
     
     // {
     //   path: '/about',
@@ -55,6 +74,18 @@ const router = createRouter({
     //   component: () => import('../views/AboutView.vue')
     // }
   ]
+})
+
+router.beforeEach((to, from) => {
+  const store = useCounterStore()
+  if (to.name === 'ArticleView'&& !store.isLogin) {
+    window.alert('로그인이 필요합니다.')
+    return {name: 'LogInView'}
+  }
+  if ((to.name === 'SignUpView' || to.name === 'LogInView') && (store.isLogin)){
+    window.alert('이미 로그인이 되어있습니다.')
+    return { name: 'ArticleView'}
+  }
 })
 
 export default router

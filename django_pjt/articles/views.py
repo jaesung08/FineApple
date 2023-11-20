@@ -61,11 +61,9 @@ def article_list(request):
 
     
     elif request.method == 'POST':
-        # authentication_classes = [BasicAuthentication, SessionAuthentication]
-        # # permission 추가
-        # permission_classes = [IsAuthenticatedOrReadOnly]
         serializer = ArticleSerializer(data=request.data)
-        if serializer.is_valid():
+        
+        if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
