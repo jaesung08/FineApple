@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(read_only = True)
     class Meta:
         model = Comment
         fields = '__all__'
@@ -25,7 +25,7 @@ class ArticleListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
         fields = '__all__'
-        
+
 
 
 # 상세 데이터에 대한 serializer
@@ -43,14 +43,14 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     # 3. serializerMethodField
     comments = serializers.SerializerMethodField()
-    
+    user = UserSerializer(read_only = True)
     # 자동으로 get_comments 메소드를 호출한다.
     # obj : instance
     def get_comments(self, obj):
         comments = obj.comment_set.all()
         return [{
             'id' : comment.id,
-            'content':comment.content
+            'comment':comment.comment
         } for comment in comments ]
 
     class Meta:

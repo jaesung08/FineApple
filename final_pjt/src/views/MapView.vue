@@ -54,29 +54,28 @@
   const districts = ref([]);
   const bankname = ref();
 
-  let map;
-  const mapLevel = ref('');
+  const mapKey = '69f10657a5bf01e678763ab544de5adb'
+let map = null;
+let infowindow = null;
+let ps = null;
 
-  // 지도 불러오기
-  onMounted( () => {
-    initializeDropdownLists(); // initializeDropdownLists 함수를 먼저 호출하여 jsonData를 초기화
-    initializeMap();
-    readJsondataFileAndDisplayMarkers();
-  });
-  
-  // 시작 장소 지정
-  const initializeMap = () => {
-    const mapContainer = document.querySelector('#map');
-    const mapOption = {
-      center: new kakao.maps.LatLng(37.56588, 126.97837),
-      level: 3,
-      mapTypeId: kakao.maps.MapTypeId.ROADMAP,
-    };
-    map = new kakao.maps.Map(mapContainer, mapOption);
+const initMap = () => {
+  const container = document.getElementById('map');
+  const options = {
+    center: new kakao.maps.LatLng(37.566826, 126.9786567),
+    level: 5,
   };
+  // 지도 객체를 등록합니다.
+  // 지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
+  map = new kakao.maps.Map(container, options);
 
-  // 엑셀 파일을 읽고 마커를 표시하는 함수
-  const displayDistrictMarkers = (jsonData) => {
+  infowindow = new kakao.maps.InfoWindow({zIndex:1})
+  ps = new kakao.maps.services.Places(map);
+  ps.categorySearch('BK9', placesSearchCB, {useMapBounds:true});
+};
+
+
+const displayDistrictMarkers = (jsonData) => {
     jsonData.DB.forEach((data) => {
       const districtMarker = new kakao.maps.Marker({
         position: new kakao.maps.LatLng(data.위도, data.경도),
@@ -85,75 +84,45 @@
     });
   };
 
-  // 초기에 마커 표시 (엑셀 데이터를 읽어오는 부분)
-  const readJsondataFileAndDisplayMarkers = async () => {
-    displayDistrictMarkers(jsonData); // jsonData를 사용하여 마커 표시
-  };
-
-//   //카카오맵 클릭 이벤트 추가
-//   kakao.maps.event.addListener(map, 'click', (mouseEvent) => {
-// 	//클릭한 위도, 경도 정보 불러오기
-// 	const latlng = mouseEvent.latLng;
-// 	//마커 위치를 클릭한 위치로 이동
-// 	marker.setPosition(latlng);
-// 	marker.setMap(map);
-	
-// 	alert(`위도 : ${latlng.getLat()}, 경도 : ${latlng.getLng()}`);
-// });
-
-  
-// 드롭다운 목록 초기화 함수
-const initializeDropdownLists = () => {
-  cities.value = [...new Set(jsonData.DB.map((item) => item.시도))];
-  districts.value = getDistrictsByCity(selectedCity.value, jsonData);
-};
-
-// 시도 변경 시 시군구 목록 업데이트 함수
-const updateDistricts = () => {
-  districts.value = getDistrictsByCity(selectedCity.value, jsonData);
-};
-
-// 시군구 목록 가져오기 함수
-const getDistrictsByCity = (city, jsonData) => {
-  const filteredData = jsonData.DB.filter((item) => item.시도 === city);
-  return [...new Set(filteredData.map((item) => item.시군구))];
-};
-
-// 검색 버튼 클릭 시 실행 함수
-const searchLocation = () => {
-  console.log(`Selected City: ${selectedCity.value}`);
-  console.log(`Selected District: ${selectedDistrict.value}`);
-  const keyword = selectedCity.value + ' ' + selectedDistrict.value + ' ' + bankname.value
-  var ps = new kakao.maps.services.Places();  
-  if (!keyword.replace(/^\s+|\s+$/g, '')) {
-      alert('키워드를 입력해주세요!');
-      return false;
-  }
-
-  // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-  ps.keywordSearch( keyword, placesSearchCB);
-  // 여기에서 선택된 정보를 활용하여 원하는 동작 수행
-};
-function placesSearchCB(data, status, pagination) {
+// 키워드 검색 완료 시 호출되는 콜백함수 입니다
+function placesSearchCB (data, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
-
-        // 정상적으로 검색이 완료됐으면
-        // 검색 목록과 마커를 표출합니다
-      console.log(data);
-      alert('완료!')
-
-    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-
-        alert('검색 결과가 존재하지 않습니다.');
-        return;
-
-    } else if (status === kakao.maps.services.Status.ERROR) {
-
-        alert('검색 결과 중 오류가 발생했습니다.');
-        return;
-
+        for (let i=0; i<data.length; i++) {
+            displayMarker(data[i]);    
+        }       
     }
 }
+// 지도에 마커를 표시하는 함수입니다
+function displayMarker(place) {
+    // 마커를 생성하고 지도에 표시합니다
+    var marker = new kakao.maps.Marker({
+        map: map,
+        position: new kakao.maps.LatLng(place.y, place.x) 
+    });
+
+    // 마커에 클릭이벤트를 등록합니다
+    kakao.maps.event.addListener(marker, 'click', function() {
+        // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+        infowindow.open(map, marker);
+    });
+}
+
+onMounted(async () => {
+  if (window.kakao && window.kakao.maps) {
+    initMap();
+    console.log('if b',infowindow)
+  } else {
+    const script = document.createElement('script');
+    /* global kakao */
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${mapKey}&libraries=services`;
+    document.head.appendChild(script);
+    script.onload = () => {
+      kakao.maps.load(initMap);
+    }
+  }
+});
+
   </script>
   
   <style>

@@ -9,30 +9,52 @@
         <p>조회수: {{ article.views }} </p>
         <p>좋아요: {{ article.likes.length }} </p>
         <p>댓글수: {{ article.comment_set.length }}</p>
-        <p>작성자: {{ article.user }}</p>
+        <p>작성자: {{ article.user.name }}</p>
         <p>작성일: {{ formatDate(article.created_at) }}</p>
         <button @click="likeArticle" class="like-button" :class="{ liked: isLiked }">
           {{ isLiked ? '좋아요 취소' : '좋아요' }}
         </button>
       </div>
+      <div class="comment-section">
+      <h3>댓글</h3>
+      <div v-if="article.comment_set.length > 0">
+        <ul>
+          <li v-for="comment in article.comment_set" :key="comment.id">
+            <div class="comment-content">
+              <p>{{ comment.user.name }}:</p>
+              <p>{{ comment.comment }}</p>
+              <p>{{ formatDate(comment.created_at) }}</p>
+            </div>
+            <!-- 댓글 삭제 버튼 -->
+            <button v-if="isCommentAuthor(comment.user.id)" @click="deleteComment(comment.id)">삭제</button>
+          </li>
+        </ul>
+      </div>
+      <div v-else>
+        <p>작성된 댓글이 없습니다.</p>
+      </div>
+      <RouterLink :to="{ name: 'AddCommentView', params: { id: route.params.id } }">댓글 작성</RouterLink>
     </div>
-    <RouterLink to="/article">뒤로가기</RouterLink>
-    <RouterLink v-if="isAuthor" :to="{name: 'DetailEditView', params : { id : route.params.id }}">게시글 수정</RouterLink> | 
-   
+    </div>
+    
+    <RouterLink to="/article">뒤로가기</RouterLink> | 
+    <RouterLink v-if="isAuthor" :to="{name: 'DetailEditView', params : { id : route.params.id }}">게시글 수정</RouterLink>
+    
   </div>
 </template>
 
 <script setup>
 import axios from 'axios';
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, onBeforeMount } from 'vue';
 import { useCounterStore } from '@/stores/counter';
 import { useRoute, useRouter } from 'vue-router';
 const router = useRouter();
 const store = useCounterStore();
 const route = useRoute();
-const article = ref(null);
+const article = ref({user:'', likes:[], views:[], comment_set:[]})
 
 const nextRoute = ref("")
+
 
 onMounted(() => {
   axios({
@@ -40,9 +62,9 @@ onMounted(() => {
     url: `${store.API_URL}/articles/${route.params.id}/`,
   })
     .then((res) => {
-      console.log(res.data);
+      console.log("res:", res.data);
       article.value = res.data;
-      getArticle();
+      console.log("article.value:",article.value);
     })
     .catch((error) => {
       console.log(error);
@@ -56,28 +78,37 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
+
 // 사용자가 현재 게시물에 대해 좋아요를 눌렀는지 여부를 확인
 const isLiked = computed(() => {
+  if (store.isLogin == false) {
+    return isLiked == false
+  }
   return article.value.likes.includes(store.userData.pk);
 });
 
+
 // 게시물의 작성자와 로그인된 유저의 pk 값을 비교하여 권한을 확인
 const isAuthor = computed(() => {
-  return article.user === store.userData.pk;
+  if (store.isLogin == false) {
+    console.log("로그인 x");
+    return isAuthor == false
+  }
+  return article.value.user.id === store.userData.pk;
 });
 
-const likeArticle = () => {
-  if (!store.token) {
-    // 로그인되어 있지 않으면 로그인 페이지로 이동
-    alert("로그인이 필요합니다.");
-    router.push({ name: "LogInView" });
-    return;
-  }
 
+
+const likeArticle = () => {
+  if (store.isLogin == false) {
+    alert("로그인이 필요합니다.");
+    return router.push({ name: "LogInView" });
+  }
+  
   axios({
     method: 'post',
     url: `${store.API_URL}/articles/${route.params.id}/like/`,
-    headers: {
+    headers: { 
       Authorization: `Token ${store.token}`,
     },
   })
@@ -91,6 +122,32 @@ const likeArticle = () => {
     });
 };
 
+// Add Comment Section
+const addCommentLink = computed(() => {
+  return store.isLogin ? { name: 'AddCommentView', params: { id: route.params.id } } : null;
+});
+
+// 댓글 삭제 함수
+const deleteComment = async (commentId) => {
+  try {
+    await axios.delete(`${store.API_URL}/articles/${route.params.id}/comments/${commentId}/`, {
+      headers: {
+        Authorization: `Token ${store.token}`,
+      },
+    });
+    alert('댓글이 삭제되었습니다.');
+    // 댓글 삭제 후 게시물 정보를 다시 가져오고 article 변수에 할당
+    article.value = await getArticle();
+  } catch (error) {
+    console.error(error.response.data);
+    alert('댓글 삭제 중 오류가 발생했습니다.');
+  }
+};
+
+// 현재 사용자가 댓글 작성자인지 확인하는 함수
+const isCommentAuthor = (userId) => {
+  return store.isLogin && userId === store.userData.pk;
+};
 
 </script>
 
@@ -138,5 +195,34 @@ const likeArticle = () => {
 
 .liked {
   background-color: #e74c3c; /* Red */
+}
+
+.comment-section {
+margin-top: 20px;
+}
+
+.comment-section h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.comment-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.comment-section li {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.comment-section li p {
+  margin: 0;
+}
+
+.comment-section p {
+  margin: 0;
 }
 </style>

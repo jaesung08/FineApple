@@ -12,6 +12,8 @@ import ProfileView from '@/views/ProfileView.vue'
 import DetailEditView from '@/views/DetailEditView.vue'
 import ProfileEditView from '@/views/ProfileEditView.vue'
 import PasswordEditView from '@/views/PasswordEditView.vue'
+import MapView from '@/views/MapView.vue'
+import AddCommentView from '@/views/AddCommentView.vue'
 import { useCounterStore } from '../stores/counter'
 
 const router = createRouter({
@@ -47,6 +49,17 @@ const router = createRouter({
       name: 'bankmap',
       component: MapView4
     },
+
+
+
+    {
+      path: '/bankmap2',
+      name: 'bankmap2',
+      component: MapView
+    },
+
+
+
     {
       path: '/financialproducts',
       name: 'financialproducts',
@@ -81,6 +94,11 @@ const router = createRouter({
       path: '/detail/:id',
       name: 'DetailEditView',
       component: DetailEditView
+    },
+    {
+      path: '/detail/:id/comment',
+      name: 'AddCommentView',
+      component: AddCommentView
     },
     
   ]

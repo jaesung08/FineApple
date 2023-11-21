@@ -5,6 +5,7 @@
         <RouterLink to="/">홈</RouterLink>
         <RouterLink to="/exchange">환율</RouterLink>
         <RouterLink to="/bankmap">은행 지도</RouterLink>
+        <RouterLink to="/bankmap2">은행 지도2</RouterLink>
         <RouterLink to="/financialproducts">예적금비교</RouterLink>
         <RouterLink to="/article">게시판</RouterLink>
         <div v-if="!store.isLogin">
