@@ -1,18 +1,25 @@
 from .models import Article, Comment
 from rest_framework import serializers
+from accounts.models import User
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'name']
 
 class CommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
     class Meta:
         model = Comment
         fields = '__all__'
         # 조회는 괜찮은데, 생성할 때는 해당필드는 빼고 생각하도록
-        read_only_fields = ('article', )
+        read_only_fields = ('article', 'user')
 
 
 # 전체 데이터에 대한 serializer
 class ArticleListSerializer(serializers.ModelSerializer):
     likes_count = serializers.IntegerField(source='likes.count')
-    
+    user = UserSerializer(read_only = True)
     # 댓글수 추가 
     comments_count = serializers.IntegerField(source='comment_set.count')
     class Meta:
@@ -35,8 +42,8 @@ class ArticleSerializer(serializers.ModelSerializer):
     coment_content = serializers.StringRelatedField(source='comment_set', many=True, read_only=True)
 
     # 3. serializerMethodField
-
     comments = serializers.SerializerMethodField()
+    
     # 자동으로 get_comments 메소드를 호출한다.
     # obj : instance
     def get_comments(self, obj):

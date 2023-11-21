@@ -8,10 +8,12 @@ from dj_rest_auth.serializers import UserDetailsSerializer
 class CustomRegisterSerializer(RegisterSerializer):
     # 회원가입 시 추가로 필요한 필드들을 모두 정의
     # 나머지 필드들은 RegisterSerizalizer 에 있음
-    nickname = serializers.CharField(required=False, allow_blank=True, max_length=255)
+    name = serializers.CharField(required=True, max_length=255)  # 유저이름으로 사용
     age = serializers.IntegerField(required=False)
     money = serializers.IntegerField(required=False)
-    salary = serializers.IntegerField(required=False)
+    saving_possible_money = serializers.IntegerField(required=False)   # 매달 저축 가능 금액으로 사용
+    saving_possible_period = serializers.IntegerField(required=False)
+    # mbti = serializers.CharField(required=False, max_length=4)
     financial_products = serializers.ListField(child=serializers.IntegerField(), required=False)
 
     def get_cleaned_data(self):
@@ -19,10 +21,12 @@ class CustomRegisterSerializer(RegisterSerializer):
             'username': self.validated_data.get('username', ''),
             'password1': self.validated_data.get('password1', ''),
             'email': self.validated_data.get('email', ''),
-            'nickname': self.validated_data.get('nickname', ''),
+            'name': self.validated_data.get('name', ''),
             'age': self.validated_data.get('age', ''),
             'money': self.validated_data.get('money', ''),
-            'salary': self.validated_data.get('salary', ''),
+            'saving_possible_money': self.validated_data.get('saving_possible_money', ''),
+            'saving_possible_period': self.validated_data.get('saving_possible_period', ''),
+            # 'mbti': self.validated_data.get('mbti', ''),
             'financial_products': self.validated_data.get('financial_products', ''),
         }
         
@@ -46,21 +50,24 @@ class CustomRegisterSerializer(RegisterSerializer):
         return user
       
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class UserProfileEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'nickname', 'age', 'money', 'salary', 'financial_products')
+        fields = ['age', 'money', 'saving_possible_money', 'saving_possible_period']
+
+
+
 
 from django.contrib.auth import authenticate, get_user_model
 UserModel = get_user_model()
 
-
-
 class CustomUserDetailsSerializer(UserDetailsSerializer):
-    nickname = serializers.CharField(required=False, allow_blank=True, max_length=255)
+    name = serializers.CharField(required=False, allow_blank=True, max_length=255)
     age = serializers.IntegerField(required=False)
     money = serializers.IntegerField(required=False)
-    salary = serializers.IntegerField(required=False)
+    saving_possible_money = serializers.IntegerField(required=False)
+    saving_possible_period = serializers.IntegerField(required=False)
+    mbti = serializers.CharField(required=False)
     financial_products = serializers.ListField(child=serializers.IntegerField(), required=False)
 
     class Meta(UserDetailsSerializer.Meta):
@@ -70,8 +77,8 @@ class CustomUserDetailsSerializer(UserDetailsSerializer):
         if hasattr(UserModel, 'EMAIL_FIELD'):
             extra_fields.append(UserModel.EMAIL_FIELD)
             
-        if hasattr(UserModel, 'nickname'):
-            extra_fields.append('nickname')
+        if hasattr(UserModel, 'name'):
+            extra_fields.append('name')
 
         if hasattr(UserModel, 'age'):
             extra_fields.append('age')
@@ -79,8 +86,14 @@ class CustomUserDetailsSerializer(UserDetailsSerializer):
         if hasattr(UserModel, 'money'):
             extra_fields.append('money')
 
-        if hasattr(UserModel, 'salary'):
-            extra_fields.append('salary')
+        if hasattr(UserModel, 'saving_possible_money'):
+            extra_fields.append('saving_possible_money')
+            
+        if hasattr(UserModel, 'saving_possible_period'):
+            extra_fields.append('saving_possible_period')
+            
+        if hasattr(UserModel, 'mbti'):
+            extra_fields.append('mbti')
 
         if hasattr(UserModel, 'financial_products'):
             extra_fields.append('financial_products')

@@ -9,6 +9,9 @@ import CreateView from '@/views/CreateView.vue'
 import SignUpView from '@/views/SignUpView.vue'
 import LogInView from '@/views/LogInView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import DetailEditView from '@/views/DetailEditView.vue'
+import ProfileEditView from '@/views/ProfileEditView.vue'
+import PasswordEditView from '@/views/PasswordEditView.vue'
 import { useCounterStore } from '../stores/counter'
 
 const router = createRouter({
@@ -63,25 +66,32 @@ const router = createRouter({
       path: '/profile',
       name: 'ProfileView',
       component: ProfileView
-    }
+    },
+    {
+      path: '/profile/edit',
+      name: 'ProfileEditView',
+      component: ProfileEditView
+    },
+    {
+      path: '/profile/password',
+      name: 'PasswordEditView',
+      component: PasswordEditView
+    },
+    {
+      path: '/detail/:id',
+      name: 'DetailEditView',
+      component: DetailEditView
+    },
     
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue')
-    // }
   ]
 })
 
 router.beforeEach((to, from) => {
   const store = useCounterStore()
-  if (to.name === 'ArticleView'&& !store.isLogin) {
+  if ((to.name === 'CreateView' || to.name === 'ProfileView') && !store.isLogin) {
     window.alert('로그인이 필요합니다.')
     return {name: 'LogInView'}
-  }
+  } 
   if ((to.name === 'SignUpView' || to.name === 'LogInView') && (store.isLogin)){
     window.alert('이미 로그인이 되어있습니다.')
     return { name: 'ArticleView'}

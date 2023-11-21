@@ -9,13 +9,13 @@ export const useCounterStore = defineStore('counter', () => {
   const API_URL = 'http://127.0.0.1:8000'
   // 회원가입
   const signup = function (payload) {
-    const { username, password1, password2, age, money, salary, nickname } = payload
+    const { username, password1, password2, age, money, saving_possible_money, name, saving_possible_period } = payload
 
     axios({
       method: 'post',
       url: `${API_URL}/accounts/signup/`,
       data: {
-        username, password1, password2, age, money, salary, nickname
+        username, password1, password2, age, money, saving_possible_money, name, saving_possible_period
       }
     }).then(res => {
       console.log('회원가입이 완료되었습니다.');
@@ -24,6 +24,72 @@ export const useCounterStore = defineStore('counter', () => {
       logIn({ username, password })
     }).catch(err => console.error(err.response.data))
   }
+
+  // 회원 정보 수정
+  const updateProfile = (editedProfile) => {
+    const { age, money, saving_possible_money, saving_possible_period } = editedProfile
+    
+    axios({
+      method: 'put',
+      url: `${API_URL}/accounts/user/edit/`,
+      data: {
+        age, money, saving_possible_money, saving_possible_period
+      },
+      headers: {
+        Authorization: `Token ${token.value}`
+      }
+    }).then(res => {
+      console.log('프로필 업데이트 성공');
+      alert('프로필이 성공적으로 업데이트되었습니다.');
+      router.push({ name: 'ProfileView' });
+    }).catch(error => {
+      console.error(error.response.data);
+      alert('프로필 수정에 실패했습니다.');
+      console.log('프로필 업데이트 실패');
+    }) 
+    }
+
+  // 비밀번호 수정
+  const changePassword = (new_password1, new_password2) => {
+    axios({
+      method: 'post',
+      url: `${API_URL}/accounts/password/change/`,
+      data: {
+        new_password1, new_password2
+      },
+      headers: {
+        Authorization: `Token ${token.value}`
+      }
+    }).then(res => {
+      console.log('비밀번호 변경 성공');
+      alert('비밀번호 변경이 완료되었습니다!');
+      router.push({ name: 'ProfileView' });
+    }).catch(error => {
+      console.error(error.response.data);
+      alert('비밀번호 변경에 실패했습니다.');
+      console.log('프로필 업데이트 실패');
+    })
+  }
+  // 회원 탈퇴
+  const withdrawMembership = () => {
+    axios({
+      method: 'delete',
+      url: `${API_URL}/accounts/user/edit/`,
+      headers: {
+        Authorization: `Token ${token.value}`
+      }
+    }).then(res => {
+      token.value = null;
+      console.log('회원 탈퇴 성공');
+      alert('회원 탈퇴가 성공적으로 처리되었습니다.');
+      router.push({ name: 'home' });
+    }).catch(error => {
+      console.error(error.response.data);
+      console.log('회원 탈퇴 실패');
+      alert('회원 탈퇴에 실패했습니다.');
+    }) 
+  }
+
   // 로그인 시 토큰 저장
   const token = ref(null)
 
@@ -41,6 +107,25 @@ export const useCounterStore = defineStore('counter', () => {
       console.log('로그인이 완료되었습니다');
       console.log(res);
       token.value = res.data.key
+      const getUserProfile = function() {
+        axios({
+          method: 'get',
+          url: `${API_URL}/accounts/user/`,
+          headers: {
+            Authorization: `Token ${token.value}`
+          }
+        })
+        .then((response) => {
+          console.log('유저 프로필 조회 결과:', response.data);
+          // 여기서 받아온 프로필 정보를 활용하면 됩니다.
+          userData.value = response.data
+    
+        })
+        .catch((error) => {
+          console.log('유저 프로필 조회 실패:', error.response.data);
+        });
+      }
+      getUserProfile()
       router.push({ name:'home'})
       console.log("완료");
 
@@ -56,7 +141,7 @@ export const useCounterStore = defineStore('counter', () => {
     }
   })
 
-
+// 프로필 불러오기
   const getUserProfile = function() {
     axios({
       method: 'get',
@@ -76,6 +161,7 @@ export const useCounterStore = defineStore('counter', () => {
     });
   }
 
+ // 로그아웃 
   const logOut = async () => {
     await axios({
       method: 'post',  // 로그아웃은 보통 POST 요청으로 수행됩니다.
@@ -84,8 +170,8 @@ export const useCounterStore = defineStore('counter', () => {
         Authorization: `Token ${token.value}`
       }
     }).then(() => {
-      store.token = null; // 토큰 초기화
-      router.push({ name: 'Home' }); // 로그아웃 후 홈으로 리다이렉트
+      token.value = null; // 토큰 초기화
+      router.push({ name: 'home' }); // 로그아웃 후 홈으로 리다이렉트
     }).catch(error => console.error(error));
   };
   
@@ -105,6 +191,8 @@ export const useCounterStore = defineStore('counter', () => {
       console.log(error)
     })
   }
+
+
   const exchangeRates = ref([])
     // DRF에 환율 조회 요청을 보내는 action
   const getExchangeRates = function() {
@@ -120,7 +208,9 @@ export const useCounterStore = defineStore('counter', () => {
       console.log(error)
     })
   }
-  const savingProducts = ref([])
+
+
+const savingProducts = ref([])
   // DRF에 적금정보 조회 요청을 보내는 action
 const getSavingProducts = function() {
   axios({
@@ -136,6 +226,8 @@ const getSavingProducts = function() {
     console.log(error)
   })
 }
+
+
 
 const depositProducts = ref([])
 // DRF에 예금정보 조회 요청을 보내는 action
@@ -155,5 +247,5 @@ axios({
 }
 
 
-  return { signup, logIn, getUserProfile, isLogin, logOut, userData, token, articles, exchangeRates, savingProducts, depositProducts, API_URL, getArticles, getExchangeRates, getSavingProducts, getDepositProducts }
+  return { signup, logIn, getUserProfile, updateProfile, changePassword, withdrawMembership, isLogin, logOut, userData, token, articles, exchangeRates, savingProducts, depositProducts, API_URL, getArticles, getExchangeRates, getSavingProducts, getDepositProducts }
 }, { persist: true })

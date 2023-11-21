@@ -9,12 +9,13 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 ## 좋아요
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def like_post(request, article_pk):
+    print(1)
     article = Article.objects.get(pk=article_pk)
+    print(article)
     user = request.user
-    
     if article.likes.filter(username=user).exists():
         article.likes.remove(user)
         return Response({"message": "Liked remove successfully"}, status=status.HTTP_201_CREATED)

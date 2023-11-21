@@ -11,8 +11,8 @@
       <label for="password2">비밀번호 확인:</label>
       <input type="password" id="password2" v-model.trim="password2" required><br>
 
-      <label for="nickname">이름:</label>
-      <input type="password" id="nickname" v-model.trim="nickname" required><br>
+      <label for="name">이름:</label>
+      <input type="text" id="name" v-model.trim="name" required><br>
 
       <label for="age">나이:</label>
       <input type="number" id="age" v-model.trim="age" required><br>
@@ -20,8 +20,11 @@
       <label for="money">자산:</label>
       <input type="text" id="money" v-model.trim="money" required><br>
       
-      <label for="salary">연봉:</label>
-      <input type="text" id="salary" v-model.trim="salary" required><br>
+      <label for="saving_possible_money">매달 저축 가능 금액:</label>
+      <input type="number" id="saving_possible_money" v-model.trim="saving_possible_money" required><br>
+
+      <label for="saving_possible_period">저축 가능 기간: (개월)</label>
+      <input type="number" id="saving_possible_period" v-model.trim="saving_possible_period" required><br>
 
       <input type="submit" value="가입하기">
     </form>
@@ -35,10 +38,11 @@ import { useCounterStore } from '@/stores/counter';
 const username = ref('');
 const password1 = ref('');
 const password2 = ref('');
-const nickname = ref('');
+const name = ref('');
 const age = ref(0);
 const money = ref('');
-const salary = ref('');
+const saving_possible_money = ref('');
+const saving_possible_period = ref('');
 
 const store = useCounterStore();
 const signUp = function () {
@@ -52,17 +56,14 @@ const signUp = function () {
     username: username.value,
     password1: password1.value,
     password2: password2.value,
-    nickname: nickname.value,
+    name: name.value,
     age: age.value,
     money: money.value,
-    salary: salary.value,
+    saving_possible_money: saving_possible_money.value,
+    saving_possible_period: saving_possible_period.value,
   };
 
-  store.signup(payload).then(() => {
-    console.log('가입에 성공했습니다.');
-  }).catch((error) => {
-    console.error('가입 실패:', error);
-  });
+  store.signup(payload)
 };
 </script>
 
