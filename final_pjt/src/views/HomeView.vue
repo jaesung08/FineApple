@@ -9,6 +9,9 @@
     <div>
     <Carousel />
   </div>
+  <footer class="footer">
+      <p>&copy; 2023 FineApple. All rights reserved.</p>
+    </footer>
   </main>
 </template>
 
@@ -30,5 +33,14 @@ import Logo from '@/components/Logo.vue'
 }
 .space200 {
     height: 200px;
+}
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f0f0f0; /* 회색 배경색 지정 */
+  padding: 10px; /* 상하좌우 여백 지정 */
+  text-align: center; /* 텍스트 가운데 정렬 */
 }
 </style>

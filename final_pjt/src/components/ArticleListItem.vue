@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <p>{{ article.id }}</p>
+    <p>{{ article.id }}🍎</p>
     <p class="title">제목: {{ article.title }}</p>
     <p class="content">내용: {{ article.content }}</p>
     <p>조회수: {{ article.views }} </p>

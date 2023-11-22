@@ -56,6 +56,14 @@ class UserProfileEditSerializer(serializers.ModelSerializer):
         fields = ['age', 'money', 'saving_possible_money', 'saving_possible_period']
 
 
+from rest_framework import serializers
+
+class UserFinancialEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['financial_products']
+
+
 
 
 from django.contrib.auth import authenticate, get_user_model

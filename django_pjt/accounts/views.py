@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import User
-from .serializers import UserProfileEditSerializer
+from .serializers import UserProfileEditSerializer, UserFinancialEditSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 
@@ -28,9 +28,30 @@ def user_profile_edit(request):
     return Response({'detail': '허용되지 않은 메서드입니다.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def user_financial_edit(request):
+    user_profile = get_object_or_404(User, username=request.user.username)
+    new_financial_product = request.data
+    print(new_financial_product)
+    if request.method == 'PUT':
+        if user_profile.financial_products is not None:
+            # financial_product가 이미 user_profile.financial_products에 있는지 확인
+            if new_financial_product in user_profile.financial_products:
+                # 이미 있는 경우 제거
+                user_profile.financial_products.remove(new_financial_product)
+            else:
+                # 없는 경우 추가
+                user_profile.financial_products.add(new_financial_product)
 
-
-
+            serializer = UserFinancialEditSerializer(user_profile, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                user_profile.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'error': 'financial_product is required'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 

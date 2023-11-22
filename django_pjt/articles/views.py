@@ -24,7 +24,7 @@ def like_post(request, article_pk):
         return Response({"message": "Article liked successfully"}, status=status.HTTP_201_CREATED)
     
 ## 댓글 작성 및 조회
-@api_view(['GET', 'POST', 'DELETE'])
+@api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def comment_list(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
@@ -34,11 +34,7 @@ def comment_list(request, article_pk):
         
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
-    
-    elif request.method == 'DELETE':
-        
-        comments.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
     
     elif request.method == 'POST':
         serializer = CommentSerializer(data=request.data)
@@ -48,6 +44,14 @@ def comment_list(request, article_pk):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticatedOrReadOnly])
+def comment_delete(request, article_pk, comment_pk):
+    article = get_object_or_404(Article, pk=article_pk)
+    comment = Comment.objects.filter(article=article, pk=comment_pk)
+    if request.method == 'DELETE':
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 ## 게시글 리스트 및 게시글 detail

@@ -41,15 +41,6 @@
   
     // 비밀번호 변경을 위한 스토어 메서드 호출
     store.changePassword(newPassword.value, confirmPassword.value)
-      .then(() => {
-        alert('비밀번호가 성공적으로 변경되었습니다.');
-        // 프로필 페이지 또는 다른 적절한 페이지로 리디렉션
-        // router.push({ name: 'profile' });
-      })
-      .catch((error) => {
-        alert('비밀번호 변경에 실패했습니다.');
-        console.log(error.response.data);
-      });
   };
   </script>
   

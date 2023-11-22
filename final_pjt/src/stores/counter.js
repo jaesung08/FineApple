@@ -7,6 +7,16 @@ export const useCounterStore = defineStore('counter', () => {
   const articles = ref([])
   const userData = ref(null)
   const API_URL = 'http://127.0.0.1:8000'
+  const savingProductsOptions = ref([])
+  const depositProductsOptions = ref([])
+  // 로그인 시 토큰 저장
+  const token = ref(null)
+  
+  const exchangeRates = ref([])
+  const savingProducts = ref([])
+  const depositProducts = ref([])
+
+
   // 회원가입
   const signup = function (payload) {
     const { username, password1, password2, age, money, saving_possible_money, name, saving_possible_period } = payload
@@ -49,6 +59,28 @@ export const useCounterStore = defineStore('counter', () => {
     }) 
     }
 
+    // 금융 상품 추가
+  const updateFinancial = (financial_product) => { 
+      axios({
+        method: 'put',
+        url: `${API_URL}/accounts/user/financial/`,
+        data: {
+          financial_product
+        },
+        headers: {
+          Authorization: `Token ${token.value}`
+        }
+      }).then(res => {
+        console.log('상품 추가 성공');
+        alert('금융상품이 성공적으로 업데이트되었습니다.');
+        // router.push({ name: 'ProfileView' });
+      }).catch(error => {
+        console.error(error.response.data);
+        alert('금융상품 목록 수정에 실패했습니다.');
+        console.log('상품 추가 실패');
+      }) 
+      }
+
   // 비밀번호 수정
   const changePassword = (new_password1, new_password2) => {
     axios({
@@ -70,6 +102,7 @@ export const useCounterStore = defineStore('counter', () => {
       console.log('프로필 업데이트 실패');
     })
   }
+
   // 회원 탈퇴
   const withdrawMembership = () => {
     axios({
@@ -90,8 +123,7 @@ export const useCounterStore = defineStore('counter', () => {
     }) 
   }
 
-  // 로그인 시 토큰 저장
-  const token = ref(null)
+
 
   // 로그인
   const logIn = function (payload) {
@@ -177,6 +209,9 @@ export const useCounterStore = defineStore('counter', () => {
   
 
 
+
+
+
   // DRF에 article 조회 요청을 보내는 action
   const getArticles = function() {
     axios({
@@ -192,8 +227,6 @@ export const useCounterStore = defineStore('counter', () => {
     })
   }
 
-
-  const exchangeRates = ref([])
     // DRF에 환율 조회 요청을 보내는 action
   const getExchangeRates = function() {
     axios({
@@ -209,43 +242,43 @@ export const useCounterStore = defineStore('counter', () => {
     })
   }
 
-
-const savingProducts = ref([])
   // DRF에 적금정보 조회 요청을 보내는 action
-const getSavingProducts = function() {
+  const getSavingProducts = function() {
+    axios({
+      method: 'get',
+      url: `${API_URL}/financial/saving_products/`
+    })
+    .then((response) => {
+      console.log(response.data)
+      savingProducts.value = response.data.saving_product
+      savingProductsOptions.value = response.data.saving_product_options
+      // console.log(savingProducts.value)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
+
+  // DRF에 예금정보 조회 요청을 보내는 action
+  const getDepositProducts = function() {
   axios({
     method: 'get',
-    url: `${API_URL}/financial/saving_products/`
+    url: `${API_URL}/financial/deposit_products/`
   })
   .then((response) => {
-    // console.log(response.data)
-    savingProducts.value = response.data
-    console.log(savingProducts.value)
+    console.log(response.data)
+    depositProducts.value = response.data.deposit_product
+    depositProductsOptions.value = response.data.deposit_product_options
+    console.log(depositProducts.value)
   })
   .catch((error) => {
     console.log(error)
   })
-}
+  }
 
 
 
-const depositProducts = ref([])
-// DRF에 예금정보 조회 요청을 보내는 action
-const getDepositProducts = function() {
-axios({
-  method: 'get',
-  url: `${API_URL}/financial/deposit_products/`
-})
-.then((response) => {
-  // console.log(response.data)
-  depositProducts.value = response.data
-  console.log(depositProducts.value)
-})
-.catch((error) => {
-  console.log(error)
-})
-}
 
-
-  return { signup, logIn, getUserProfile, updateProfile, changePassword, withdrawMembership, isLogin, logOut, userData, token, articles, exchangeRates, savingProducts, depositProducts, API_URL, getArticles, getExchangeRates, getSavingProducts, getDepositProducts }
+  return { signup, logIn, getUserProfile, updateProfile, updateFinancial, changePassword, withdrawMembership, isLogin, logOut, userData, token, exchangeRates, savingProducts, savingProductsOptions, depositProducts, depositProductsOptions, API_URL, articles,  getArticles, getExchangeRates, getSavingProducts, getDepositProducts }
 }, { persist: true })

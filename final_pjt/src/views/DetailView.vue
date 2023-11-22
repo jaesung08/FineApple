@@ -33,7 +33,7 @@
       <div v-else>
         <p>작성된 댓글이 없습니다.</p>
       </div>
-      <RouterLink :to="{ name: 'AddCommentView', params: { id: route.params.id } }">댓글 작성</RouterLink>
+      <RouterLink :class="addCommentLink" :to="{ name: 'AddCommentView', params: { id: route.params.id } }">댓글 작성</RouterLink>
     </div>
     </div>
     
@@ -98,7 +98,7 @@ const isAuthor = computed(() => {
 });
 
 
-
+// 게시물 좋아요 , 로그인 안할 시 로그인 페이지로
 const likeArticle = () => {
   if (store.isLogin == false) {
     alert("로그인이 필요합니다.");
@@ -127,17 +127,17 @@ const addCommentLink = computed(() => {
   return store.isLogin ? { name: 'AddCommentView', params: { id: route.params.id } } : null;
 });
 
+
 // 댓글 삭제 함수
 const deleteComment = async (commentId) => {
   try {
-    await axios.delete(`${store.API_URL}/articles/${route.params.id}/comments/${commentId}/`, {
+    await axios.delete(`${store.API_URL}/articles/${route.params.id}/comment/${commentId}/`, {
       headers: {
         Authorization: `Token ${store.token}`,
       },
     });
     alert('댓글이 삭제되었습니다.');
-    // 댓글 삭제 후 게시물 정보를 다시 가져오고 article 변수에 할당
-    article.value = await getArticle();
+    location.reload();
   } catch (error) {
     console.error(error.response.data);
     alert('댓글 삭제 중 오류가 발생했습니다.');
