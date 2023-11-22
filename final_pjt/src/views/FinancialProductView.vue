@@ -6,6 +6,7 @@
     <form action="" class="center" @submit.prevent="handleSubmit">
       <div class="select-wrapper">
         <select name="은행" id="bank" v-model="bank">
+          <option value="전체">전체</option>
           <option value="국민은행">국민은행</option>
           <option value="우리은행">우리은행</option>
           <option value="신한은행">신한은행</option>
@@ -28,6 +29,7 @@
       </div>
       <div class="select-wrapper">
         <select name="예치기간" id="term" v-model="term">
+          <option value="전체">전체</option>
           <option value="6">6개월</option>
           <option value="12">12개월</option>
           <option value="24">24개월</option>
@@ -144,7 +146,11 @@
             </tr>
             <tr>
               <td class="td1">가입제한</td>
-              <td>{{ item.join_deny }}</td>
+              <td>      
+                <span v-if="item.join_deny === 1">제한 없음</span>
+                <span v-else-if="item.join_deny === 2">서민전용</span>
+                <span v-else-if="item.join_deny === 3">일부제한</span>
+              </td>
             </tr>
             <tr>
               <td class="td1">가입대상</td>
@@ -182,10 +188,10 @@
 import { onMounted, ref } from "vue";
 import { useCounterStore } from "@/stores/counter";
 import { RouterLink } from "vue-router";
-import DepositList from "../components/DepositList.vue";
-import SavingList from "../components/SavingList.vue";
-import DepositListItem from "../components/DepositListItem.vue";
-import SavingListItem from "../components/SavingListItem.vue";
+import DepositList from "@/components/DepositList.vue";
+import SavingList from "@/components/SavingList.vue";
+import DepositListItem from "@/components/DepositListItem.vue";
+import SavingListItem from "@/components/SavingListItem.vue";
 
 const store = useCounterStore();
 

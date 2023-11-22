@@ -3,7 +3,7 @@
       <table class="styled-table">
         <tr>
           <td class="label">
-            {{ item.id }}
+            {{ index }}
           </td>
           <td class="bank">
             {{ item.kor_co_nm }}
@@ -65,21 +65,6 @@
     </table>
   </td>
 </tr>
-
-  
-        <!-- <tr v-if="showDetails">
-          <td></td>
-          <td class="details">
-            {{ item.etc_note }}
-            {{ item.join_deny }}
-            {{ item.join_member }}
-            {{ item.join_way }}
-            {{ item.spcl_cnd }}
-            {{ item.mtrt_int }}
-            {{ item.max_limit }}
-          </td>
-        </tr> -->
-        
       </table>
     </div>
   </template>

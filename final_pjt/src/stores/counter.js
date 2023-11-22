@@ -203,6 +203,8 @@ export const useCounterStore = defineStore('counter', () => {
       }
     }).then(() => {
       token.value = null; // 토큰 초기화
+      wantProducts.value = [];
+      userData.value = null;
       router.push({ name: 'home' }); // 로그아웃 후 홈으로 리다이렉트
     }).catch(error => console.error(error));
   };
