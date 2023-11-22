@@ -97,48 +97,45 @@
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useCounterStore } from '@/stores/counter';
+import { storeToRefs } from 'pinia';
 const store = useCounterStore();
 const showDetails = ref(false)
-const showDetails2 = ref(false)
+
 
 const toggleDetails = () => {
   showDetails.value = !showDetails.value
 }
-defineProps({
+const product = defineProps({
   item: Object
 })
-
+// console.log('11', product.item.fin_prdt_cd);
 const options = ref([])
 options.value = store.depositProductsOptions
 
-const product = item.value
-const handleButtonClick = () => {
-  if (showDetails.value) {
+const showDetails2 = ref(product.item.fin_prdt_cd in store.wantProducts)
+
+const handleButtonClick =  () => {
+  if (!showDetails2.value) {
     // 해지하기 버튼을 눌렀을 때의 동작
     // product에 해당 상품에 대한 정보를 넣어주고, 요청을 다시 보내고, 버튼을 '가입하기'로 변경하는 로직 추가
-    store.updateFinancial(product.value)
-      .then(() => {
-        // 요청 성공 시, 버튼을 '가입하기'로 변경
-        showDetails2.value = false; // 상세 정보 숨기기
-      })
-      .catch(error => {
-        // 요청 실패 시 에러 처리 로직 추가
-        console.error('요청 실패:', error);
-      });
+     store.updateFinancial(product.item.fin_prdt_cd)
+     store.wantProducts.push(product.item.fin_prdt_cd)
+    console.log("test1", product.item.fin_prdt_cd)
+    console.log(store.wantProducts);
+    showDetails2.value = !showDetails2.value
   } else {
     // 가입하기 버튼을 눌렀을 때의 동작
     // product에 해당 상품에 대한 정보를 넣어주고, 해당 함수가 작동하게 해주고, 버튼을 '해지하기'로 변경하는 로직 추가
-    store.updateFinancial(product.value)
-      .then(() => {
-        // 요청 성공 시, 버튼을 '해지하기'로 변경
-        showDetails2.value = true; // 상세 정보 보이기
-      })
-      .catch(error => {
-        // 요청 실패 시 에러 처리 로직 추가
-        console.error('요청 실패:', error);
-      });
+     store.updateFinancial(product.item.fin_prdt_cd)
+     const index = store.wantProducts.indexOf(product.item.fin_prdt_cd)
+    // store.wantProducts.push(product.item.fin_prdt_cd)
+     console.log("test2", product.item.fin_prdt_cd)
+     store.wantProducts.splice(index, 1)
+     console.log(store.wantProducts);
+     showDetails2.value = !showDetails2.value
   }
 }
+
 </script>
 
 <style scoped>

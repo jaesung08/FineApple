@@ -4,14 +4,22 @@ from allauth.account.adapter import DefaultAccountAdapter
 
 # Create your models here.
 class User(AbstractUser):
+    예금 = '예금'
+    적금 = '적금'
+    FINANCIAL_CHOICES = [
+        (예금, '예금'),
+        (적금, '적금'),
+    ]
     name = models.TextField(blank=False)    # 이름
     age = models.IntegerField(blank=True, null=True)    # 나이
     money = models.IntegerField(blank=True, null=True)  # 보유자산
     saving_possible_money = models.IntegerField(blank=True, null=True)  # 매달 저축 가능 금액
     saving_possible_period = models.IntegerField(blank=True, null=True)  # 추가: 저축 가능 기간
+    financial_type = models.CharField(max_length=2, choices=FINANCIAL_CHOICES, blank=True, default=None, ) # 추가: 예적금 중 희망 
     mbti = models.CharField(max_length=4, blank=True, null=True)  # 추가: MBTI
     # 리스트 데이터 저장을 위해 Text 형태로 저장
     financial_products = models.TextField(blank=True, null=True)
+    
     
     # # superuser fields
     # is_active = models.BooleanField(default=True)
@@ -35,6 +43,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         money = data.get("money")
         saving_possible_money = data.get("saving_possible_money")
         saving_possible_period = data.get("saving_possible_period")
+        financial_type = data.get("financial_type")
         mbti = data.get("mbti")
         financial_products = data.get("financial_products")
         
@@ -51,6 +60,8 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             user.saving_possible_money = saving_possible_money
         if saving_possible_period:
             user.saving_possible_period = saving_possible_period
+        if financial_type:
+            user.financial_type = financial_type
         if mbti:
             user.mbti = mbti
         if financial_products:

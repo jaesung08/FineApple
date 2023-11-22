@@ -15,17 +15,17 @@ export const useCounterStore = defineStore('counter', () => {
   const exchangeRates = ref([])
   const savingProducts = ref([])
   const depositProducts = ref([])
-
+  const wantProducts = ref([])
 
   // 회원가입
   const signup = function (payload) {
-    const { username, password1, password2, age, money, saving_possible_money, name, saving_possible_period } = payload
+    const { username, password1, password2, age, money, saving_possible_money, name, saving_possible_period, financial_type } = payload
 
     axios({
       method: 'post',
       url: `${API_URL}/accounts/signup/`,
       data: {
-        username, password1, password2, age, money, saving_possible_money, name, saving_possible_period
+        username, password1, password2, age, money, saving_possible_money, financial_type, name, saving_possible_period
       }
     }).then(res => {
       console.log('회원가입이 완료되었습니다.');
@@ -37,13 +37,13 @@ export const useCounterStore = defineStore('counter', () => {
 
   // 회원 정보 수정
   const updateProfile = (editedProfile) => {
-    const { age, money, saving_possible_money, saving_possible_period } = editedProfile
+    const { age, money, saving_possible_money, saving_possible_period, financial_type } = editedProfile
     
     axios({
       method: 'put',
       url: `${API_URL}/accounts/user/edit/`,
       data: {
-        age, money, saving_possible_money, saving_possible_period
+        age, money, saving_possible_money, saving_possible_period, financial_type
       },
       headers: {
         Authorization: `Token ${token.value}`
@@ -280,5 +280,5 @@ export const useCounterStore = defineStore('counter', () => {
 
 
 
-  return { signup, logIn, getUserProfile, updateProfile, updateFinancial, changePassword, withdrawMembership, isLogin, logOut, userData, token, exchangeRates, savingProducts, savingProductsOptions, depositProducts, depositProductsOptions, API_URL, articles,  getArticles, getExchangeRates, getSavingProducts, getDepositProducts }
+  return { signup, logIn, getUserProfile, updateProfile, updateFinancial, changePassword, withdrawMembership, isLogin, logOut, userData, token, exchangeRates, savingProducts, savingProductsOptions, depositProducts, depositProductsOptions, API_URL, articles, wantProducts, getArticles, getExchangeRates, getSavingProducts, getDepositProducts }
 }, { persist: true })

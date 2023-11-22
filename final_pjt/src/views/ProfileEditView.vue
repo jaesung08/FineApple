@@ -28,17 +28,14 @@
           <input v-model.trim="saving_possible_period" type="number" required class="form-input" />
         </label>
   
-        <!--
-        <label for="mbti" class="form-label">
-          금융 MBTI:
-          <input v-model.trim="mbti" class="form-input" />
-        </label>
-  
-        <label for="financial_products" class="form-label">
-          선택 상품:
-          <input v-model.trim="financial_products" disabled class="form-input" />
-        </label>
-        -->
+        <label>원하는 금융 상품 유형:</label>
+      <div>
+        <input type="radio" id="예금" value="예금" v-model="financial_type" required>
+        <label for="예금">예금</label>
+
+        <input type="radio" id="적금" value="적금" v-model="financial_type" required>
+        <label for="적금">적금</label>
+      </div>
   
         <input type="submit" value="프로필 수정" class="submit-button" />
       </form>
@@ -59,7 +56,7 @@ import router from '@/router';
   const money = ref(store.userData.money)
   const saving_possible_money = ref(store.userData.saving_possible_money)
   const saving_possible_period = ref(store.userData.saving_possible_period)
-
+  const financial_type = ref(store.financial_type)
 
   
   const editProfile = function () {
@@ -68,6 +65,7 @@ import router from '@/router';
     money: money.value,
     saving_possible_money: saving_possible_money.value,
     saving_possible_period: saving_possible_period.value,
+    financial_type: financial_type.value,
     // mbti: store.userData.mbti,
     // financial_products: store.userData.financial_products, // 선택 상품은 수정 불가능
   }

@@ -13,8 +13,9 @@ class CustomRegisterSerializer(RegisterSerializer):
     money = serializers.IntegerField(required=False)
     saving_possible_money = serializers.IntegerField(required=False)   # 매달 저축 가능 금액으로 사용
     saving_possible_period = serializers.IntegerField(required=False)
+    financial_type = serializers.CharField(required=False, max_length=2)
     # mbti = serializers.CharField(required=False, max_length=4)
-    financial_products = serializers.ListField(child=serializers.IntegerField(), required=False)
+    financial_products = serializers.ListField(child=serializers.CharField(), required=False)
 
     def get_cleaned_data(self):
         return {
@@ -26,6 +27,7 @@ class CustomRegisterSerializer(RegisterSerializer):
             'money': self.validated_data.get('money', ''),
             'saving_possible_money': self.validated_data.get('saving_possible_money', ''),
             'saving_possible_period': self.validated_data.get('saving_possible_period', ''),
+            'financial_type': self.validated_data.get('financial_type', ''),
             # 'mbti': self.validated_data.get('mbti', ''),
             'financial_products': self.validated_data.get('financial_products', ''),
         }
@@ -53,10 +55,9 @@ class CustomRegisterSerializer(RegisterSerializer):
 class UserProfileEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['age', 'money', 'saving_possible_money', 'saving_possible_period']
+        fields = ['age', 'money', 'saving_possible_money', 'saving_possible_period', 'financial_type']
 
 
-from rest_framework import serializers
 
 class UserFinancialEditSerializer(serializers.ModelSerializer):
     class Meta:
@@ -75,9 +76,19 @@ class CustomUserDetailsSerializer(UserDetailsSerializer):
     money = serializers.IntegerField(required=False)
     saving_possible_money = serializers.IntegerField(required=False)
     saving_possible_period = serializers.IntegerField(required=False)
-    mbti = serializers.CharField(required=False)
-    financial_products = serializers.ListField(child=serializers.IntegerField(), required=False)
+    mbti = serializers.CharField(required=False, max_length=4)
+    financial_type = serializers.CharField(required=False, max_length=2)
+    financial_products = serializers.ListField(child=serializers.CharField(), required=False)
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        # financial_products를 리스트에서 쉼표로 구분된 문자열로 변환
+        representation['financial_products'] = ''.join(map(str, instance.financial_products)) if instance.financial_products else ''
+        
+        return representation
+
+    
     class Meta(UserDetailsSerializer.Meta):
         extra_fields = []
         if hasattr(UserModel, 'USERNAME_FIELD'):
@@ -102,6 +113,9 @@ class CustomUserDetailsSerializer(UserDetailsSerializer):
             
         if hasattr(UserModel, 'mbti'):
             extra_fields.append('mbti')
+            
+        if hasattr(UserModel, 'financial_type'):
+            extra_fields.append('financial_type')
 
         if hasattr(UserModel, 'financial_products'):
             extra_fields.append('financial_products')

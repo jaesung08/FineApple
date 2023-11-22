@@ -8,6 +8,7 @@
         <p><strong>자산:</strong> {{ store.userData.money }}원</p>
         <p><strong>매달 저축 가능 금액:</strong> {{ store.userData.saving_possible_money  }}원</p>
         <p><strong>저축 가능 기간:</strong> {{ store.userData.saving_possible_period  }}개월</p>
+        <p><strong>원하는 금융 상품 유형:</strong> {{ store.userData.financial_type  }}</p>
         <p><strong>금융 MBTI:</strong> {{ store.userData.mbti  }}</p>
         <p><strong>선택 상품:</strong> {{ store.userData.financial_products }}</p>
       </div>

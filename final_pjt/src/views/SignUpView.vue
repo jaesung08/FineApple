@@ -26,6 +26,15 @@
       <label for="saving_possible_period">저축 가능 기간: (개월)</label>
       <input type="number" id="saving_possible_period" v-model.trim="saving_possible_period" required><br>
 
+      <label>원하는 금융 상품 유형:</label>
+      <div>
+        <input type="radio" id="예금" value="예금" v-model="financial_type" required>
+        <label for="예금">예금</label>
+
+        <input type="radio" id="적금" value="적금" v-model="financial_type" required>
+        <label for="적금">적금</label>
+      </div>
+
       <input type="submit" value="가입하기">
     </form>
   </div>
@@ -43,6 +52,7 @@ const age = ref(0);
 const money = ref('');
 const saving_possible_money = ref('');
 const saving_possible_period = ref('');
+const financial_type = ref('');
 
 const store = useCounterStore();
 const signUp = function () {
@@ -61,6 +71,7 @@ const signUp = function () {
     money: money.value,
     saving_possible_money: saving_possible_money.value,
     saving_possible_period: saving_possible_period.value,
+    financial_type: financial_type.value,
   };
 
   store.signup(payload)
