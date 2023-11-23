@@ -101,7 +101,14 @@ const product = defineProps({
 // console.log('11', product.item.fin_prdt_cd);
 
 
-const showDetails2 = ref(product.item.fin_prdt_cd in store.wantProducts)
+
+
+
+const showDetails2 = ref(false)
+
+showDetails2.value = Array.from(store.wantProducts).find((ele) => {
+  return ele === product.item.fin_prdt_cd
+})
 
 const handleButtonClick =  () => {
   if (!showDetails2.value) {
@@ -110,7 +117,7 @@ const handleButtonClick =  () => {
      store.updateFinancial(product.item.fin_prdt_cd)
      store.wantProducts.push(product.item.fin_prdt_cd)
      console.log("상품 추가 완")
-    console.log(store.wantProducts);
+    
     showDetails2.value = !showDetails2.value
   } else {
     // 가입하기 버튼을 눌렀을 때의 동작

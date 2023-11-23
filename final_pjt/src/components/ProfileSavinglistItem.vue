@@ -3,7 +3,7 @@
       <table class="styled-table">
         <tr>
           <td class="label">
-            {{ index }}
+            {{ product.idx }}
           </td>
           <td class="bank">
             {{ item.kor_co_nm }}
@@ -83,7 +83,8 @@
   }
   
   const product = defineProps({
-    item: Object
+    item: Object,
+    idx: Number
   })
 
 const showDetails2 = ref(product.item.fin_prdt_cd in store.wantProducts)

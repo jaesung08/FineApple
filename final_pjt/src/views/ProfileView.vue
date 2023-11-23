@@ -26,20 +26,18 @@
     <div class="selected-products-container" v-if="store.userData && store.userData.financial_products">
       <h2 class="center">선택 상품 리스트</h2>
       <h3 class="center">예금 상품</h3>
-      <div v-for="(product, index) in splitFinancialProducts" :key="index">
-        <div v-if="selectedItem = isProductInList(product, store.depositProducts)">
-          <ProfileDepositListItem :key="index" :item="selectedItem" :index="index" />
-        </div>
+      <div v-for="(product, index) in depositList" :key="product.id">
+        <ProfileDepositListItem 
+        :item="product" 
+        :idx="index + 1" />
       </div>
 
+
       <h3 class="center">적금 상품</h3>
-      <div v-for="(product, index) in splitFinancialProducts" :key="index">
-        <div v-if="selectedItem = isProductInList(product, store.savingProducts)">
-          <ProfileSavinglistItem :key="index" :item="selectedItem" :index="index" />
-        </div>
-        <!-- <div v-else class="center">
-          <p>담은 상품이 없습니다.</p>
-        </div> -->
+      <div v-for="(product, index) in savingList" :key="product.id">
+          <ProfileSavinglistItem 
+          :item="product" 
+          :idx="index+1" />
       </div>
     </div>
   </div>
@@ -59,21 +57,21 @@ onMounted(() => {
   console.log("불러오기 완료");
 });
 
-const splitFinancialProducts = computed(() => {
-  if (store.userData && store.userData.financial_products) {
-    return store.userData.financial_products.split(',').map(item => item.trim());
-  }
-  return [];
-});
 
-const isProductInList = (product, productList) => {
-  for (const item of productList) {
-    if (item.fin_prdt_cd === product) {
-      return item;
-    }
-  }
-  return false;
-};
+
+const depositList = computed(() => {
+  const productList = store.userData.financial_products.split(',')
+  return store.depositProducts.filter((ele) => {
+    return productList.find((product) => product === ele.fin_prdt_cd)
+  })
+})
+
+const savingList = computed(() => {
+  const productList = store.userData.financial_products.split(',')
+  return store.savingProducts.filter((ele) => {
+    return productList.find((product) => product === ele.fin_prdt_cd)
+  })
+})
 </script>
 
 <style scoped>
