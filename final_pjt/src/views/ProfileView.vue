@@ -8,9 +8,18 @@
         <p><strong>아이디:</strong> {{ store.userData.username }}</p>
         <p><strong>나이:</strong> {{ store.userData.age }}세</p>
         <p><strong>자산:</strong> {{ store.userData.money }}원</p>
-        <p><strong>매달 저축 가능 금액:</strong> {{ store.userData.saving_possible_money }}원</p>
-        <p><strong>저축 가능 기간:</strong> {{ store.userData.saving_possible_period }}개월</p>
-        <p><strong>원하는 금융 상품 유형:</strong> {{ store.userData.financial_type }}</p>
+        <p>
+          <strong>매달 저축 가능 금액:</strong>
+          {{ store.userData.saving_possible_money }}원
+        </p>
+        <p>
+          <strong>저축 가능 기간:</strong>
+          {{ store.userData.saving_possible_period }}개월
+        </p>
+        <p>
+          <strong>원하는 금융 상품 유형:</strong>
+          {{ store.userData.financial_type }}
+        </p>
         <p><strong>금융 MBTI:</strong> {{ store.userData.mbti }}</p>
       </div>
       <RouterLink :to="{ name: 'ProfileEditView' }">수정</RouterLink> |
@@ -23,7 +32,10 @@
     </div>
 
     <!-- 선택 상품 리스트 -->
-    <div class="selected-products-container" v-if="store.userData && store.userData.financial_products">
+    <div
+      class="selected-products-container"
+      v-if="store.userData && store.userData.financial_products"
+    >
       <h2 class="center">선택 상품 리스트</h2>
       <h3 class="center">예금 상품</h3>
       <div v-for="(product, index) in depositList" :key="product.id">
@@ -44,13 +56,12 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue';
-import { useCounterStore } from '@/stores/counter';
-import ProfileSavinglistItem from '@/components/ProfileSavinglistItem.vue';
-import ProfileDepositListItem from '@/components/ProfileDepositListItem.vue';
+import { onMounted, ref, computed } from "vue";
+import { useCounterStore } from "@/stores/counter";
+import ProfileSavinglistItem from "@/components/ProfileSavinglistItem.vue";
+import ProfileDepositListItem from "@/components/ProfileDepositListItem.vue";
 
 const store = useCounterStore();
-
 
 onMounted(() => {
   store.getUserProfile();
@@ -82,7 +93,7 @@ const savingList = computed(() => {
 }
 
 h1 {
-  color: #1E4B4C;
+  color: #1e4b4c;
   font-size: 28px;
   margin-bottom: 20px;
 }
@@ -99,7 +110,8 @@ strong {
   margin-right: 10px;
 }
 
-.selected-products-container h2, .selected-products-container h3 {
+.selected-products-container h2,
+.selected-products-container h3 {
   margin-top: 20px;
   margin-bottom: 10px;
 }

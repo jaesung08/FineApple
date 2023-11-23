@@ -1,12 +1,9 @@
-
 <template>
   <div class="container">
-    <h1>예적금 비교</h1>
-    <!-- <form action="" class="center"> -->
+    <h1>내 조건에 맞는 상품 찾기</h1>
     <form action="" class="center" @submit.prevent="handleSubmit">
       <div class="select-wrapper">
         <select name="은행" id="bank" v-model="bank">
-          <option value="전체">전체</option>
           <option value="국민은행">국민은행</option>
           <option value="우리은행">우리은행</option>
           <option value="신한은행">신한은행</option>
@@ -29,7 +26,6 @@
       </div>
       <div class="select-wrapper">
         <select name="예치기간" id="term" v-model="term">
-          <option value="전체">전체</option>
           <option value="6">6개월</option>
           <option value="12">12개월</option>
           <option value="24">24개월</option>
@@ -38,29 +34,6 @@
       </div>
       <button type="submit" class="submit-button">찾기</button>
     </form>
-
-    <div class="box-container">
-      <div class="box deposit-box">
-        <RouterLink :to="{ name: 'depositlist' }"
-          ><h3>예금 리스트</h3></RouterLink
-        >
-      </div>
-      <div class="box saving-box">
-        <RouterLink :to="{ name: 'savinglist' }"
-          ><h3>적금 리스트</h3></RouterLink
-        >
-      </div>
-    </div>
-    <!-- <p v-for="product in filteredDepositList">
-      {{ product.id }}
-      {{ product.kor_co_nm }}
-      {{ product.fin_prdt_nm }}
-    </p>
-    <p v-for="product in filteredSavingList">
-      {{ product.id }}
-      {{ product.kor_co_nm }}
-      {{ product.fin_prdt_nm }}
-    </p> -->
 
     <div class="table-container">
       <table class="styled-table">
@@ -74,7 +47,7 @@
           <td class="product">
             <span @click="toggleDetails">{{ item.fin_prdt_nm }}</span>
           </td>
-          <!-- 옵션 추가 -->
+
           <td class="option1">
             <p>
               {{
@@ -146,11 +119,7 @@
             </tr>
             <tr>
               <td class="td1">가입제한</td>
-              <td>      
-                <span v-if="item.join_deny === 1">제한 없음</span>
-                <span v-else-if="item.join_deny === 2">서민전용</span>
-                <span v-else-if="item.join_deny === 3">일부제한</span>
-              </td>
+              <td>{{ item.join_deny }}</td>
             </tr>
             <tr>
               <td class="td1">가입대상</td>
@@ -175,11 +144,18 @@
           </table>
         </td>
       </tr>
-
-      <!-- <DepositList :filteredData="filteredDepositList" />
-    <SavingList :filteredData="filteredSavingList" /> -->
-      <DepositList />
-      <SavingList />
+    </div>
+    <div class="box-container">
+      <div class="box deposit-box">
+        <RouterLink :to="{ name: 'DepositList' }"
+          ><h3>모든<br />예금<br />상품</h3></RouterLink
+        >
+      </div>
+      <div class="box saving-box">
+        <RouterLink :to="{ name: 'SavingList' }"
+          ><h3>모든<br />적금<br />상품</h3></RouterLink
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -205,7 +181,9 @@ onMounted(() => {
   store.getDepositProducts();
   store.getSavingProducts();
 });
-
+defineProps({
+  item: Object,
+});
 const filterData = (data) => {
   console.log(data);
   const data2 = data.filter((d) => d.kor_co_nm === bank.value);
@@ -277,30 +255,43 @@ options.value = store.depositProductsOptions;
 }
 
 .box-container {
-  display: flex;
-  gap: 10px; /* Adjust the gap between boxes */
-  margin-top: 20px;
+  /* display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 30%;
+  margin: 100px 20px 100px 0px;
+  padding: 10px 10px 150px 10px;
+  border-radius: 0px 5px 5px 0px;  */
+  position: fixed;
+  left: 0;
+  /*top: 2%;
+  background-color: none;
+  color: white; 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);  */
 }
 
 .box {
   flex: 1;
-  padding: 20px;
+  padding: 5px; /* 여백 추가 */
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  border-radius: 5px;
+  border-radius: 0 10px 10px 0;
+  width: 100%;
+  /* writing-mode: vertical-lr; 
+  text-orientation: upright;  */
 }
 
 .deposit-box {
-  background-color: white; /* Accent color */
-  color: black;
+  background-color: rgb(0, 75, 76); /* 흰색 배경 */
+  color: white; /* 배경과 대조되는 텍스트 색상 */
+  margin-bottom: 20px;
 }
 
 .saving-box {
-  background-color: white; /* Accent color */
-  color: black;
+  background-color: rgb(0, 75, 76); /* 흰색 배경 */
+  color: white; /* 배경과 대조되는 텍스트 색상 */
 }
-
 .box:hover {
   background-color: #00585b; /* Darker shade on hover */
   color: #fff;
@@ -321,7 +312,6 @@ options.value = store.depositProductsOptions;
 .link-wrapper RouterLink:hover {
   color: rgb(0, 75, 76); /* Accent color on hover */
 }
-
 .table-container {
   max-width: 600px;
   margin: auto;
@@ -353,9 +343,9 @@ options.value = store.depositProductsOptions;
 .styled-table td.product {
   font-weight: bold;
   width: 70%;
-  white-space: nowrap; /* Prevent line breaks */
-  overflow: hidden; /* Hide overflowing content */
-  text-overflow: ellipsis; /* Display ellipsis (...) for overflow */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .details-table {
