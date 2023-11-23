@@ -35,14 +35,14 @@
                 <img src="@/assets/images/AEIF.png" alt="" v-if="data.type == 'AEIF'" />
                 <img src="@/assets/images/AESD.png" alt="" v-if="data.type == 'AESD'" />
                 <img src="@/assets/images/AESF.png" alt="" v-if="data.type == 'AESF'" />
-                <img src="@/assets/images/IBID.png" alt="" v-if="data.type == 'IBID'" />
-                <img src="@/assets/images/IBIF.png" alt="" v-if="data.type == 'IBIF'" />
-                <img src="@/assets/images/IBSD.png" alt="" v-if="data.type == 'IBSD'" />
-                <img src="@/assets/images/IBSF.png" alt="" v-if="data.type == 'IBSF'" />
-                <img src="@/assets/images/IEID.png" alt="" v-if="data.type == 'IEID'" />
-                <img src="@/assets/images/IEIF.png" alt="" v-if="data.type == 'IEIF'" />
-                <img src="@/assets/images/IESD.png" alt="" v-if="data.type == 'IESD'" />
-                <img src="@/assets/images/IESF.png" alt="" v-if="data.type == 'IESF'" />
+                <img src="@/assets/images/NBID.png" alt="" v-if="data.type == 'NBID'" />
+                <img src="@/assets/images/NBIF.png" alt="" v-if="data.type == 'NBIF'" />
+                <img src="@/assets/images/NBSD.png" alt="" v-if="data.type == 'NBSD'" />
+                <img src="@/assets/images/NBSF.png" alt="" v-if="data.type == 'NBSF'" />
+                <img src="@/assets/images/NEID.png" alt="" v-if="data.type == 'NEID'" />
+                <img src="@/assets/images/NEIF.png" alt="" v-if="data.type == 'NEIF'" />
+                <img src="@/assets/images/NESD.png" alt="" v-if="data.type == 'NESD'" />
+                <img src="@/assets/images/NESF.png" alt="" v-if="data.type == 'NESF'" />
             </span>
         </section>
 </template>
@@ -63,7 +63,7 @@ const store2 = useFinancialTypeTestStore();
 const { resultSet } = store2;
 const data = ref('');
 const mbti = ref(store2.resultType)
-console.log(mbti);
+console.log('1', mbti);
 resultSet.forEach(ele => {
     console.log('ele', ele);
     console.log('resultType', store2.resultType);

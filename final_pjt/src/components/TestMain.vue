@@ -55,51 +55,51 @@
                         style="width: 140px; height: 140px" />
  
                     <img
-                        src="@/assets/images/IBID.jpeg"
+                        src="@/assets/images/NBID.jpeg"
                         alt=""
-                        v-if="result.type == 'IBID'"
+                        v-if="result.type == 'NBID'"
                         style="width: 140px; height: 140px" />
  
                     <img
-                        src="@/assets/images/IBIF.jpeg"
+                        src="@/assets/images/NBIF.jpeg"
                         alt=""
-                        v-if="result.type == 'IBIF'"
+                        v-if="result.type == 'NBIF'"
                         style="width: 140px; height: 140px" />
 
                     <img
-                        src="@/assets/images/IBSD.jpeg"
+                        src="@/assets/images/NBSD.jpeg"
                         alt=""
-                        v-if="result.type == 'IBSD'"
+                        v-if="result.type == 'NBSD'"
                         style="width: 140px; height: 140px" />
 
                     <img
-                        src="@/assets/images/IBSF.jpeg"
+                        src="@/assets/images/NBSF.jpeg"
                         alt=""
-                        v-if="result.type == 'IBSF'"
+                        v-if="result.type == 'NBSF'"
                         style="width: 140px; height: 140px" />
 
                     <img
-                        src="@/assets/images/IEID.jpeg"
+                        src="@/assets/images/NEID.jpeg"
                         alt=""
-                        v-if="result.type == 'IEID'"
+                        v-if="result.type == 'NEID'"
                         style="width: 140px; height: 140px" />
    
                     <img
-                        src="@/assets/images/IEIF.jpeg"
+                        src="@/assets/images/NEIF.jpeg"
                         alt=""
-                        v-if="result.type == 'IEIF'"
+                        v-if="result.type == 'NEIF'"
                         style="width: 140px; height: 140px" />
 
                     <img
-                        src="@/assets/images/IESD.jpeg"
+                        src="@/assets/images/NESD.jpeg"
                         alt=""
-                        v-if="result.type == 'IESD'"
+                        v-if="result.type == 'NESD'"
                         style="width: 140px; height: 140px" />
 
                     <img
-                        src="@/assets/images/IESF.jpeg"
+                        src="@/assets/images/NESF.jpeg"
                         alt=""
-                        v-if="result.type == 'IESF'"
+                        v-if="result.type == 'NESF'"
                         style="width: 140px; height: 140px" />
                         
                 </span>
