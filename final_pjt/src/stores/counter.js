@@ -3,20 +3,19 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import router from "@/router";
 
-export const useCounterStore = defineStore(
-  "counter",
-  () => {
-    const articles = ref([]);
-    const userData = ref(null);
-    const API_URL = "http://127.0.0.1:8000";
-    const savingProductsOptions = ref([]);
-    const depositProductsOptions = ref([]);
-    // 로그인 시 토큰 저장
-    const token = ref(null);
-
-    const exchangeRates = ref([]);
-    const savingProducts = ref([]);
-    const depositProducts = ref([]);
+export const useCounterStore = defineStore('counter', () => {
+  const articles = ref([])
+  const userData = ref(null)
+  const API_URL = 'http://127.0.0.1:8000'
+  const savingProductsOptions = ref([])
+  const depositProductsOptions = ref([])
+  // 로그인 시 토큰 저장
+  const token = ref(null)
+  
+  const exchangeRates = ref([])
+  const savingProducts = ref([])
+  const depositProducts = ref([])
+  const wantProducts = ref([])
 
     // 회원가입
     const signup = function (payload) {
@@ -29,7 +28,7 @@ export const useCounterStore = defineStore(
         saving_possible_money,
         name,
         saving_possible_period,
-      } = payload;
+     , financial_type } = payload;
 
       axios({
         method: "post",
@@ -41,7 +40,7 @@ export const useCounterStore = defineStore(
           age,
           money,
           saving_possible_money,
-          name,
+          financial_type, name,
           saving_possible_period,
         },
       })
@@ -56,7 +55,7 @@ export const useCounterStore = defineStore(
 
     // 회원 정보 수정
     const updateProfile = (editedProfile) => {
-      const { age, money, saving_possible_money, saving_possible_period } =
+      const { age, money, saving_possible_money, saving_possible_period, financial_type } =
         editedProfile;
 
       axios({
@@ -66,7 +65,7 @@ export const useCounterStore = defineStore(
           age,
           money,
           saving_possible_money,
-          saving_possible_period,
+          saving_possible_period,, financial_type
         },
         headers: {
           Authorization: `Token ${token.value}`,
@@ -234,7 +233,9 @@ export const useCounterStore = defineStore(
       })
         .then(() => {
           token.value = null; // 토큰 초기화
-          router.push({ name: "home" }); // 로그아웃 후 홈으로 리다이렉트
+          wantProducts.value = [];
+      userData.value = null;
+      router.push({ name: "home" }); // 로그아웃 후 홈으로 리다이렉트
         })
         .catch((error) => console.error(error));
     };
@@ -286,47 +287,25 @@ export const useCounterStore = defineStore(
         });
     };
 
-    // DRF에 예금정보 조회 요청을 보내는 action
-    const getDepositProducts = function () {
-      axios({
-        method: "get",
-        url: `${API_URL}/financial/deposit_products/`,
-      })
-        .then((response) => {
-          console.log(response.data);
-          depositProducts.value = response.data.deposit_product;
-          depositProductsOptions.value = response.data.deposit_product_options;
-          console.log(depositProducts.value);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
+  // DRF에 예금정보 조회 요청을 보내는 action
+  const getDepositProducts = function() {
+  axios({
+    method: 'get',
+    url: `${API_URL}/financial/deposit_products/`
+  })
+  .then((response) => {
+    console.log(response.data)
+    depositProducts.value = response.data.deposit_product
+    depositProductsOptions.value = response.data.deposit_product_options
+    console.log(depositProducts.value)
+  })
+  .catch((error) => {
+    console.log(error)
+  })
+  }
 
-    return {
-      signup,
-      logIn,
-      getUserProfile,
-      updateProfile,
-      updateFinancial,
-      changePassword,
-      withdrawMembership,
-      isLogin,
-      logOut,
-      userData,
-      token,
-      exchangeRates,
-      savingProducts,
-      savingProductsOptions,
-      depositProducts,
-      depositProductsOptions,
-      API_URL,
-      articles,
-      getArticles,
-      getExchangeRates,
-      getSavingProducts,
-      getDepositProducts,
-    };
-  },
-  { persist: true }
-);
+
+
+
+  return { signup, logIn, getUserProfile, updateProfile, updateFinancial, changePassword, withdrawMembership, isLogin, logOut, userData, token, exchangeRates, savingProducts, savingProductsOptions, depositProducts, depositProductsOptions, API_URL, articles, wantProducts, getArticles, getExchangeRates, getSavingProducts, getDepositProducts }
+}, { persist: true })

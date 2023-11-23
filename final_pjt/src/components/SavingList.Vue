@@ -14,5 +14,5 @@ import { useCounterStore } from "@/stores/counter";
 import SavingListItem from "@/components/SavingListItem.vue";
 
 const store = useCounterStore();
-console.log("saving :", store.savingProducts);
+// console.log("saving :", store.savingProducts);
 </script>

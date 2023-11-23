@@ -31,27 +31,46 @@ def user_profile_edit(request):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def user_financial_edit(request):
-    user_profile = get_object_or_404(User, username=request.user.username)
-    new_financial_product = request.data
-    print(new_financial_product)
-    if request.method == 'PUT':
-        if user_profile.financial_products is not None:
-            # financial_product가 이미 user_profile.financial_products에 있는지 확인
-            if new_financial_product in user_profile.financial_products:
-                # 이미 있는 경우 제거
-                user_profile.financial_products.remove(new_financial_product)
-            else:
-                # 없는 경우 추가
-                user_profile.financial_products.add(new_financial_product)
-
-            serializer = UserFinancialEditSerializer(user_profile, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                user_profile.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    user = get_object_or_404(User, username=request.user.username)
+    print(user.financial_products)
+    new_financial_product = request.data.get('financial_product')
+    print(request.data.get('financial_product'))
+    
+    # financial_products 필드가 문자열이므로 직접 추가 또는 제거
+    if user.financial_products:
+        # 기존 항목이 존재하면 쉼표로 구분된 문자열을 리스트로 변환
+        existing_products = user.financial_products.split(',')
+        
+        if new_financial_product in existing_products:
+            # 이미 있는 경우 제거
+            existing_products.remove(new_financial_product)
+            print(1)
         else:
-            return Response({'error': 'financial_product is required'}, status=status.HTTP_400_BAD_REQUEST)
+            # 없는 경우 추가
+            print(2)
+            existing_products.append(new_financial_product)
+        
+        # 리스트를 다시 쉼표로 구분된 문자열로 변환하여 저장
+        user.financial_products = ','.join(existing_products)
+    else:
+        user.financial_products = new_financial_product
+    
+    print(user.financial_products)
+
+    # 위에서 financial_products를 직접 조작했기 때문에 따로 저장해야 함
+    user.save()
+    print(3)
+
+    serializer = UserFinancialEditSerializer(instance=user, data={'financial_products': user.financial_products}, partial=True)
+
+    if request.method == 'PUT':
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({"message": "Invalid request method"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 

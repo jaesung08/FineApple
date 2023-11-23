@@ -15,8 +15,8 @@ import PasswordEditView from "@/views/PasswordEditView.vue";
 import MapView from "@/views/MapView.vue";
 import AddCommentView from "@/views/AddCommentView.vue";
 import { useCounterStore } from "../stores/counter";
-import DepositListView from "@/components/DepositList.vue";
-import SavingListView from "@/components/SavingList.vue";
+import DepositList from "@/components/DepositList.vue";
+import SavingList from "@/components/SavingList.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -64,13 +64,13 @@ const router = createRouter({
     },
     {
       path: "/financialproducts/depositlist",
-      name: "depositlist",
-      component: DepositListView,
+      name: "DepositList",
+      component: DepositList,
     },
     {
       path: "/financialproducts/savinglist",
-      name: "savinglist",
-      component: SavingListView,
+      name: "SavingList",
+      component: SavingList,
     },
     {
       path: "/signup",

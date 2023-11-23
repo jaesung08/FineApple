@@ -7,5 +7,3 @@ urlpatterns = [
     path('user/edit/', views.user_profile_edit),
     path('user/financial/', views.user_financial_edit),
 ]
-
-# updateFinancial
