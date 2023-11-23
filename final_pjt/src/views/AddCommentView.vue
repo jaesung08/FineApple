@@ -1,28 +1,6 @@
 <template>
     <div>
       <h1 class="comment-title">댓글 작성</h1>
-
-    <!-- <div v-if="article">
-        <h1 class="detail-title">Detail</h1>
-        <div class="article-details">
-          <div class="comment-section">
-            <h3>댓글</h3>
-            <template v-if="article.comment_set.length > 0">
-              <ul>
-                <li v-for="comment in article.comment_set" :key="comment.id">
-                  <p>{{ comment.user.name }}:</p>
-                  <p>{{ comment.content }}</p>
-                  <p>{{ formatDate(comment.created_at) }}</p>
-                </li>
-              </ul>
-            </template>
-            <template v-else>
-              <p>작성된 댓글이 없습니다.</p>
-            </template>
-          </div>
-        </div>
-      </div> -->
-
       <form @submit.prevent="submitComment">
         <div>
           <label for="comment">댓글 내용:</label>
@@ -49,16 +27,6 @@
   const route = useRoute();
   const comment = ref('');
   
-//   // 현재 게시물 정보를 가져오는 함수
-//   const getArticle = async () => {
-//     try {
-//       const response = await axios.get(`${store.API_URL}/articles/${route.params.id}/`);
-//       return response.data;
-//     } catch (error) {
-//       console.error(error);
-//       return null;
-//     }
-//   };
   
   // 댓글 작성 함수
   const submitComment = async () => {
@@ -78,11 +46,6 @@
     }
   };
   
-//   // 초기에 게시물 정보를 가져와 article 변수에 할당
-//   const article = ref(null);
-//   onMounted(async () => {
-//     article.value = await getArticle();
-//   });
   </script>
 
   <style scoped>

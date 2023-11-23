@@ -24,6 +24,9 @@
       </div>
       <RouterLink :to="{ name: 'ProfileEditView' }">수정</RouterLink> |
       <RouterLink :to="{ name: 'PasswordEditView' }">비밀번호 변경</RouterLink>
+      <li>
+          <button class="big special" @click="$router.push({name: 'test-main'})">금융MBTI 검사하기!</button>
+      </li>
     </div>
 
     <!-- 로딩 중 메시지 -->

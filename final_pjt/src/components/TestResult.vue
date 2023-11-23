@@ -1,63 +1,9 @@
-<script setup>
-import { ref, watch, onMounted } from "vue";
-import { useRoute } from 'vue-router';
-import { usefinancilTypeTestStore } from '@/stores/financilTypeTest';
-import { useMemberStore} from '@/stores/member'
-import { storeToRefs } from "pinia";
-const { VITE_VUE_API_URL } = import.meta.env;
-
-const route = useRoute();
-const memberStore = useMemberStore();
-const { userInfo } = storeToRefs(memberStore);
-const {getUserInfo} = memberStore;
-const url = location.href;
-const state = ref(false);
-
-const store = usefinancilTypeTestStore();
-const { resultSet } = store;
-const data = ref('');
-
-resultSet.forEach(ele => {
-    if (ele.no == route.params.type) {
-        data.value = ele;
-    }
-});
-
-const save = async () => {
-    if (userInfo.value.userId == '') {
-        alert('로그인 후 이용해 주세요')
-    } else {
-        var fom = new FormData();
-        fom.append('userId', userInfo.value.userId);
-        fom.append('tati', route.params.type);
-        fetch(VITE_VUE_API_URL + "/user/modify", {
-            method: "PUT",
-            body: fom,
-        })
-            .then((response) => {
-                let msg = "수정에 실패했습니다.";
-                console.log(response);
-                console.log(response.status);
-                if (response.status == 201) {
-                    msg = "수정 되었습니다.";
-                    let token = sessionStorage.getItem("accessToken");
-        getUserInfo(token);
-                }
-                alert(msg);
-            })
-            .catch((error) => console.log(error));
-    }
-}
-
-console.log(route.params.type);
-</script>
-
 <template>
     <section id="banner">
             <div class="content">
                 <header>
                     <h1 class="icon fa-tag">
-                        &nbsp;{{ data.type }}<br />
+                        {{store.userData.name }}님의 FMTI 타입은  {{ data.type }} 입니다!<br />
                     </h1>
                     <h3>{{ data.tag }}</h3>
                 </header>
@@ -66,43 +12,79 @@ console.log(route.params.type);
                     {{ data.explain }}
                 </p>
                 <hr>
-                <p class="row" style="text-align: center;">
-                    <div class="6u icon fa-thumbs-up">
-                        잘어울리는 음식 <br>
-                            {{ data.good }}
-                    </div>
-                    <div class="6u$ icon fa-thumbs-down">
-                        안어울리는 음식 <br>
-                            {{ data.bad }}
-                    </div>
-                </p>
-                <hr>
                 <ul class="actions row">
                     <li class="12u$">&nbsp;</li>
-                    <template v-if="userInfo.userId != ''">
-                        <li class="6u"><a class="button special" @click="save">TATI 저장</a></li>
-                        <li class="6u$"><a class="button" @click="$router.push({name:'map-detail',params:{id:2384136}})">추천 여행지</a></li>
+                    <template v-if="store.isLogin">
+                        <li class="6u"><button clbuttonss="button special" @click="save">FMTI 저장</button></li>
+                        <!-- <li class="6u$"><a class="button" @click="$router.push({name:'map-detail',params:{id:2384136}})">추천 금융 상품</a></li> -->
                     </template>
                     <li class="12u$">&nbsp;</li>
-                    <li class="6u"><a class="button" @click="()=>{state = !state}">공유하기</a></li>
-                    <li class="6u$"><a class="button special" @click="$router.push({name:'test-main'})">다시 검사하기</a></li>
+                    <!-- <li class="6u"><a class="button" @click="()=>{state = !state}">공유하기</a></li> -->
+                    <li class="6u$"><button class="button special" @click="$router.push({name:'test-main'})">다시 검사하기</button></li>
                     <li class="12u$">&nbsp;</li>
-                    <div class="12u$ box" v-if="state">{{ url }}</div>
+                    <!-- <div class="12u$ box" v-if="state">{{ url }}</div> -->
                 </ul>
 
             </div>
             <span class="image object">
-                <img src="../../assets/images/111.png" alt="" v-if="data.no =='111'">
-                <img src="../../assets/images/112.png" alt="" v-if="data.no == '112'">
-                <img src="../../assets/images/121.png" alt="" v-if="data.no == '121'">
-                <img src="../../assets/images/122.jpeg" alt="" v-if="data.no == '122'">
-                <img src="../../assets/images/211.png" alt="" v-if="data.no == '211'">
-                <img src="../../assets/images/212.jpeg" alt="" v-if="data.no == '212'">
-                <img src="../../assets/images/221.jpeg" alt="" v-if="data.no == '221'">
-                <img src="../../assets/images/222.jpeg" alt="" v-if="data.no == '222'">
+                <img src="@/assets/images/ABID.png" alt="" v-if="data.type == 'ABID'" />
+                <img src="@/assets/images/ABIF.png" alt="" v-if="data.type == 'ABIF'" />
+                <img src="@/assets/images/ABSD.png" alt="" v-if="data.type == 'ABSD'" />
+                <img src="@/assets/images/ABSF.png" alt="" v-if="data.type == 'ABSF'" />
+                <img src="@/assets/images/AEID.png" alt="" v-if="data.type == 'AEID'" />
+                <img src="@/assets/images/AEIF.png" alt="" v-if="data.type == 'AEIF'" />
+                <img src="@/assets/images/AESD.png" alt="" v-if="data.type == 'AESD'" />
+                <img src="@/assets/images/AESF.png" alt="" v-if="data.type == 'AESF'" />
+                <img src="@/assets/images/IBID.png" alt="" v-if="data.type == 'IBID'" />
+                <img src="@/assets/images/IBIF.png" alt="" v-if="data.type == 'IBIF'" />
+                <img src="@/assets/images/IBSD.png" alt="" v-if="data.type == 'IBSD'" />
+                <img src="@/assets/images/IBSF.png" alt="" v-if="data.type == 'IBSF'" />
+                <img src="@/assets/images/IEID.png" alt="" v-if="data.type == 'IEID'" />
+                <img src="@/assets/images/IEIF.png" alt="" v-if="data.type == 'IEIF'" />
+                <img src="@/assets/images/IESD.png" alt="" v-if="data.type == 'IESD'" />
+                <img src="@/assets/images/IESF.png" alt="" v-if="data.type == 'IESF'" />
             </span>
         </section>
 </template>
+
+<script setup>
+import { ref, watch, onMounted } from "vue";
+import { useRoute } from 'vue-router';
+import { useFinancialTypeTestStore } from '@/stores/financialTypeTest';
+import { useCounterStore } from "@/stores/counter";
+
+
+const route = useRoute();
+const url = location.href;
+const state = ref(false);
+
+const store = useCounterStore()
+const store2 = useFinancialTypeTestStore();
+const { resultSet } = store2;
+const data = ref('');
+const mbti = ref(store2.resultType)
+console.log(mbti);
+resultSet.forEach(ele => {
+    console.log('ele', ele);
+    console.log('resultType', store2.resultType);
+    // console.log('route', route);
+    if (ele.type == mbti.value) {
+        data.value = ele;
+    }
+    console.log('data', data.value);
+});
+
+
+
+const save = () => {
+    store.updateMbti(mbti.value)
+    
+}
+
+console.log(route.params.type);
+</script>
+
+
 
 <style scoped>
 

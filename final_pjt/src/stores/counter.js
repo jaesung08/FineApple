@@ -108,6 +108,30 @@ export const useCounterStore = defineStore('counter', () => {
         });
     };
 
+    // 금융mbti 저장 및 수정
+    const updateMbti = (mbti) => {
+      axios({
+        method: "put",
+        url: `${API_URL}/accounts/user/mbti/`,
+        data: {
+          mbti,
+        },
+        headers: {
+          Authorization: `Token ${token.value}`,
+        },
+      })
+        .then((res) => {
+          console.log("mbti 저장 성공");
+          alert("MBTI가 성공적으로 업데이트되었습니다.");
+          router.push({ name: 'ProfileView' });
+        })
+        .catch((error) => {
+          console.error(error.response.data);
+          alert("MBTI 저장에 실패했습니다.");
+          console.log("mbti 저장 실패");
+        });
+    }
+
     // 비밀번호 수정
     const changePassword = (new_password1, new_password2) => {
       axios({
@@ -308,5 +332,5 @@ export const useCounterStore = defineStore('counter', () => {
 
 
 
-  return { signup, logIn, getUserProfile, updateProfile, updateFinancial, changePassword, withdrawMembership, isLogin, logOut, userData, token, exchangeRates, savingProducts, savingProductsOptions, depositProducts, depositProductsOptions, API_URL, articles, wantProducts, getArticles, getExchangeRates, getSavingProducts, getDepositProducts }
+  return { signup, logIn, getUserProfile, updateProfile, updateFinancial, updateMbti, changePassword, withdrawMembership, isLogin, logOut, userData, token, exchangeRates, savingProducts, savingProductsOptions, depositProducts, depositProductsOptions, API_URL, articles, wantProducts, getArticles, getExchangeRates, getSavingProducts, getDepositProducts }
 }, { persist: true })

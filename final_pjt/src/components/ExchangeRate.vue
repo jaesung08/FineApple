@@ -1,9 +1,9 @@
 <template>
   <div class="calculator-container">
-    <h1 class="calculator-title">환율 계산기1</h1>
+    <h1 class="calculator-title">원화로 환산</h1>
 
     <div class="form-group">
-      <label for="exchangeRate">환율 선택:</label>
+      <label for="exchangeRate">통화 선택:</label>
       <select
         v-model="selectedExchangeRate"
         id="exchangeRate"
@@ -53,7 +53,6 @@ import { useCounterStore } from "@/stores/counter";
 const store = useCounterStore();
 const selectedExchangeRate = ref(null);
 const amount = ref(0);
-
 store.exchangeRates;
 
 const updateSelectedExchangeRate = () => {

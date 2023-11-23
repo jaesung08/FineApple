@@ -1,60 +1,107 @@
-<script setup>
-import {ref, watch, onMounted} from "vue";
-import {useRoute} from "vue-router";
-import {usefinancilTypeTestStore} from "@/stores/financilTypeTest";
-
-const route = useRoute();
-
-const store = usefinancilTypeTestStore();
-const {resultSet} = store;
-</script>
-
 <template>
     <section>
-        <h2 class="icon fa-hand-peace-o">&nbsp; 8가지의 TATI를 소개합니다~~</h2>
+        <h2 class="icon fa-hand-peace-o">&nbsp; 16가지의 fmti를 소개합니다~~!</h2>
+        <div>
+            <p><strong>fmti 란?</strong></p>
+            <p>Financial Management Type Indicator의 약자로 mbti와 유사한 금융 관리 유형 지표 입니다!</p>
+        </div>
+                    <ul class="actions" style="text-align: center">
+                <li>
+                    <button class="big" @click="$router.push({name: 'test-test'})">검사하기!</button>
+                </li>
+            </ul>
         <div class="features">
-            <article v-for="result in resultSet" :key="result.no">
+            <article v-for="result in resultSet" :key="result.type">
                 <span class="icon">
                     <img
-                        src="../../assets/images/111.png"
+                        src="@/assets/images/ABID.png"
                         alt=""
-                        v-if="result.no == '111'"
+                        v-if="result.type == 'ABID'"
                         style="width: 140px; height: 140px" />
                     <img
-                        src="../../assets/images/112.png"
+                        src="@/assets/images/ABIF.png"
                         alt=""
-                        v-if="result.no == '112'"
+                        v-if="result.type == 'ABIF'"
                         style="width: 140px; height: 140px" />
                     <img
-                        src="../../assets/images/121.png"
+                        src="@/assets/images/ABSD.png"
                         alt=""
-                        v-if="result.no == '121'"
+                        v-if="result.type == 'ABSD'"
                         style="width: 140px; height: 140px" />
                     <img
-                        src="../../assets/images/122.jpeg"
+                        src="@/assets/images/ABSF.jpeg"
                         alt=""
-                        v-if="result.no == '122'"
+                        v-if="result.type == 'ABSF'"
                         style="width: 140px; height: 140px" />
                     <img
-                        src="../../assets/images/211.jpg"
+                        src="@/assets/images/AEID.jpg"
                         alt=""
-                        v-if="result.no == '211'"
+                        v-if="result.type == 'AEID'"
                         style="width: 140px; height: 140px" />
                     <img
-                        src="../../assets/images/212.jpeg"
+                        src="@/assets/images/AEIF.jpeg"
                         alt=""
-                        v-if="result.no == '212'"
+                        v-if="result.type == 'AEIF'"
                         style="width: 140px; height: 140px" />
                     <img
-                        src="../../assets/images/221.jpeg"
+                        src="@/assets/images/AESD.jpeg"
                         alt=""
-                        v-if="result.no == '221'"
+                        v-if="result.type == 'AESD'"
                         style="width: 140px; height: 140px" />
                     <img
-                        src="../../assets/images/222.jpeg"
+                        src="@/assets/images/AESF.jpeg"
                         alt=""
-                        v-if="result.no == '222'"
+                        v-if="result.type == 'AESF'"
                         style="width: 140px; height: 140px" />
+ 
+                    <img
+                        src="@/assets/images/IBID.jpeg"
+                        alt=""
+                        v-if="result.type == 'IBID'"
+                        style="width: 140px; height: 140px" />
+ 
+                    <img
+                        src="@/assets/images/IBIF.jpeg"
+                        alt=""
+                        v-if="result.type == 'IBIF'"
+                        style="width: 140px; height: 140px" />
+
+                    <img
+                        src="@/assets/images/IBSD.jpeg"
+                        alt=""
+                        v-if="result.type == 'IBSD'"
+                        style="width: 140px; height: 140px" />
+
+                    <img
+                        src="@/assets/images/IBSF.jpeg"
+                        alt=""
+                        v-if="result.type == 'IBSF'"
+                        style="width: 140px; height: 140px" />
+
+                    <img
+                        src="@/assets/images/IEID.jpeg"
+                        alt=""
+                        v-if="result.type == 'IEID'"
+                        style="width: 140px; height: 140px" />
+   
+                    <img
+                        src="@/assets/images/IEIF.jpeg"
+                        alt=""
+                        v-if="result.type == 'IEIF'"
+                        style="width: 140px; height: 140px" />
+
+                    <img
+                        src="@/assets/images/IESD.jpeg"
+                        alt=""
+                        v-if="result.type == 'IESD'"
+                        style="width: 140px; height: 140px" />
+
+                    <img
+                        src="@/assets/images/IESF.jpeg"
+                        alt=""
+                        v-if="result.type == 'IESF'"
+                        style="width: 140px; height: 140px" />
+                        
                 </span>
                 <div class="content">
                     <h3>{{ result.type }}</h3>
@@ -62,6 +109,7 @@ const {resultSet} = store;
                         {{ result.tag }}
                     </h4>
                 </div>
+                <hr>
             </article>
         </div>
         <article>
@@ -69,15 +117,22 @@ const {resultSet} = store;
                 <li>
                     <button class="big" @click="$router.push({name: 'test-test'})">검사하기!</button>
                 </li>
-                <li>&nbsp;</li>
-                <li>&nbsp;</li>
-                <li>&nbsp;</li>
-                <li>
-                    <button class="big special" @click="$router.push({name: 'test-test'})">검사하기!</button>
-                </li>
             </ul>
         </article>
     </section>
 </template>
+
+<script setup>
+import {ref, watch, onMounted} from "vue";
+import {useRoute} from "vue-router";
+import { useFinancialTypeTestStore } from '@/stores/financialTypeTest';
+
+const route = useRoute();
+
+const store = useFinancialTypeTestStore();
+const {resultSet} = store;
+</script>
+
+
 
 <style scoped></style>

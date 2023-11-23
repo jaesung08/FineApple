@@ -1,37 +1,43 @@
 <template>
   <div class="container">
-    <div class="exchange-rate-container">
-      <ExchangeRate />
+    <button @click="toggleCalculator">🍎</button>
+    <div
+      v-if="currentCalculator === 'calculator1'"
+      class="calculator-container"
+    >
+      <Calculator1 />
     </div>
-    <div class="exchange-rate-container">
-      <ExchangeRate2 />
+    <div v-else class="calculator-container">
+      <Calculator2 />
     </div>
   </div>
 </template>
 
 <script setup>
-import ExchangeRate from "@/components/ExchangeRate.vue";
-import ExchangeRate2 from "@/components/ExchangeRate2.vue";
-import { onMounted } from "vue";
-import { useCounterStore } from "@/stores/counter";
-import { RouterLink } from "vue-router";
+import Calculator1 from "@/components/ExchangeRate.vue";
+import Calculator2 from "@/components/ExchangeRate2.vue";
+import { ref } from "vue";
 
-const store = useCounterStore();
-onMounted(() => {
-  store.getExchangeRates();
-});
+const currentCalculator = ref("calculator1");
+
+const toggleCalculator = () => {
+  currentCalculator.value =
+    currentCalculator.value === "calculator1" ? "calculator2" : "calculator1";
+};
 </script>
 
 <style scoped>
 .container {
   display: flex;
-  justify-content: space-between; /* Adjust as needed */
-  border: 1px solid red; /* Add a border for debugging */
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
 }
 
-.exchange-rate-container {
-  width: 48%; /* Adjust as needed, leaving some space for margins */
-  margin-bottom: 20px; /* Adjust as needed */
-  border: 1px solid blue; /* Add a border for debugging */
+.calculator-container {
+  width: 70%; /* Adjust the width as needed */
+  box-sizing: border-box;
+  margin: 10px; /* Add margin for spacing */
 }
+
 </style>

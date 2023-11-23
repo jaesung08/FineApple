@@ -64,19 +64,6 @@
             }}
           </p>
         </td>
-
-        <!-- <td class="option1">
-          <p> {{ options.filter(option => option.fin_prdt_cd === item.fin_prdt_cd)[0].intr_rate }}</p>
-        </td>
-        <td class="option2">
-          <p> {{ options.filter(option => option.fin_prdt_cd === item.fin_prdt_cd)[1].intr_rate  }}</p>
-        </td>
-        <td class="option3">
-          <p> {{ options.filter(option => option.fin_prdt_cd === item.fin_prdt_cd)[2].intr_rate  }}</p>
-        </td>
-        <td class="option4">
-          <p> {{ options.filter(option => option.fin_prdt_cd === item.fin_prdt_cd)  }}</p>
-        </td>  -->
       </tr>
       <tr v-if="showDetails">
         <td colspan="7">

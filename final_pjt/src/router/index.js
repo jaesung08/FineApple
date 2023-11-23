@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import ArticleView from "../views/ArticleView.vue";
 import ExchangeView from "../views/ExchangeView.vue";
-import MapView3 from "@/views/MapView3.vue";
 import FinancialProductView from "../views/FinancialProductView.vue";
 import DetailView from "@/views/DetailView.vue";
 import CreateView from "@/views/CreateView.vue";
@@ -17,6 +16,11 @@ import AddCommentView from "@/views/AddCommentView.vue";
 import { useCounterStore } from "../stores/counter";
 import DepositList from "@/components/DepositList.vue";
 import SavingList from "@/components/SavingList.vue";
+import TestTest from "@/components/TestTest.vue"
+import TestResult from "@/components/TestResult.vue"
+import TestMain from "@/components/TestMain.vue"
+import ProductSuggestionView from "@/views/ProductSuggestionView.vue"
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -48,12 +52,6 @@ const router = createRouter({
     {
       path: "/bankmap",
       name: "bankmap",
-      component: MapView3,
-    },
-
-    {
-      path: "/bankmap2",
-      name: "bankmap2",
       component: MapView,
     },
 
@@ -87,6 +85,28 @@ const router = createRouter({
       name: "ProfileView",
       component: ProfileView,
     },
+    {
+      path: "/product-suggest",
+      name: "ProductSuggestionView",
+      component: ProductSuggestionView,
+    },
+
+    {
+      path: "/mbtitest",
+      name: "test-test",
+      component: TestTest,
+    },
+    {
+      path: "/mbtiresult",
+      name: "test-result",
+      component: TestResult,
+    },
+    {
+      path: "/testmain",
+      name: "test-main",
+      component: TestMain,
+    },
+
     {
       path: "/profile/edit",
       name: "ProfileEditView",
