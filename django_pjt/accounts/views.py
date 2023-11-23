@@ -90,6 +90,44 @@ def user_mbti_edit(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def product_mbti(request):
+    if request.method == 'GET':
+        # 현재 요청한 유저의 mbti 정보 가져오기
+        requesting_user = request.user
+        requesting_user_mbti = requesting_user.mbti
+
+        # mbti가 같은 다른 유저들 필터링
+        users_with_same_mbti = User.objects.filter(mbti=requesting_user_mbti)
+        # 빈 딕셔너리 초기화
+        result_dict = {}
+
+        # 각 유저들의 financial_products 리스트를 분석하여 딕셔너리에 저장
+        for user in users_with_same_mbti:
+            print(user)
+            if not user.financial_products:
+
+                continue
+            financial_products_list = user.financial_products.split(',')
+            print('?', financial_products_list)
+            for product in financial_products_list:
+                product = product.strip()  # 앞뒤 공백 제거
+                print('!', product)
+                # 딕셔너리에 이미 키가 존재하는지 확인하고 없으면 추가, 있으면 값을 증가
+                if product in result_dict:
+                    result_dict[product] += 1
+                else:
+                    result_dict[product] = 1
+            print(result_dict)
+        # 딕셔너리를 값에 따라 내림차순으로 정렬
+        sorted_result = dict(sorted(result_dict.items(), key=lambda item: item[1], reverse=True))
+        top_10_keys = list(sorted_result.keys())[:10]
+
+
+        return Response(top_10_keys)
+    else:
+        return Response({'error': 'Only GET requests are allowed.'})
 
 
 

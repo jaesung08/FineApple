@@ -16,6 +16,7 @@ export const useCounterStore = defineStore('counter', () => {
   const savingProducts = ref([])
   const depositProducts = ref([])
   const wantProducts = ref([])
+  const recommendedProduct = ref()
 
     // 회원가입
     const signup = function (payload) {
@@ -132,6 +133,33 @@ export const useCounterStore = defineStore('counter', () => {
         });
     }
 
+    // 추천 금융 상품 가져오기
+    const getProductByMbti = () => {
+      axios({
+        method: "get",
+        url: `${API_URL}/accounts/user/recommended_product/`,
+        headers: {
+          Authorization: `Token ${token.value}`,
+        },
+      })
+        .then((res) => {
+          console.log(res.data);
+          recommendedProduct.value = res.data
+          console.log("추천 금융 상품 완");
+          console.log(recommendedProduct.value);
+          return res.data;
+        })
+        .catch((error) => {
+          console.error(error.response.data);
+          // alert("MBTI 저장에 실패했습니다.");
+          console.log("금융 상품 추천 실패");
+        });
+    }
+
+
+
+
+
     // 비밀번호 수정
     const changePassword = (new_password1, new_password2) => {
       axios({
@@ -195,23 +223,6 @@ export const useCounterStore = defineStore('counter', () => {
           console.log("로그인이 완료되었습니다");
           console.log(res);
           token.value = res.data.key;
-          const getUserProfile = function () {
-            axios({
-              method: "get",
-              url: `${API_URL}/accounts/user/`,
-              headers: {
-                Authorization: `Token ${token.value}`,
-              },
-            })
-              .then((response) => {
-                console.log("유저 프로필 조회 결과:", response.data);
-                // 여기서 받아온 프로필 정보를 활용하면 됩니다.
-                userData.value = response.data;
-              })
-              .catch((error) => {
-                console.log("유저 프로필 조회 실패:", error.response.data);
-              });
-          };
           getUserProfile();
           router.push({ name: "home" });
           console.log("완료");
@@ -259,9 +270,9 @@ export const useCounterStore = defineStore('counter', () => {
         .then(() => {
           token.value = null; // 토큰 초기화
           wantProducts.value = [];
-      userData.value = null;
-      router.push({ name: "home" }); // 로그아웃 후 홈으로 리다이렉트
-        })
+          userData.value = null;
+          router.push({ name: "home" }); // 로그아웃 후 홈으로 리다이렉트
+            })
         .catch((error) => console.error(error));
     };
 
@@ -332,5 +343,5 @@ export const useCounterStore = defineStore('counter', () => {
 
 
 
-  return { signup, logIn, getUserProfile, updateProfile, updateFinancial, updateMbti, changePassword, withdrawMembership, isLogin, logOut, userData, token, exchangeRates, savingProducts, savingProductsOptions, depositProducts, depositProductsOptions, API_URL, articles, wantProducts, getArticles, getExchangeRates, getSavingProducts, getDepositProducts }
+  return { signup, logIn, getUserProfile, updateProfile, updateFinancial, updateMbti, getProductByMbti, changePassword, withdrawMembership, isLogin, logOut, userData, token, exchangeRates, savingProducts, savingProductsOptions, depositProducts, depositProductsOptions, API_URL, articles, wantProducts, recommendedProduct, getArticles, getExchangeRates, getSavingProducts, getDepositProducts }
 }, { persist: true })

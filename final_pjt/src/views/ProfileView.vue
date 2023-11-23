@@ -75,6 +75,7 @@ onMounted(() => {
 
 const depositList = computed(() => {
   const productList = store.userData.financial_products.split(',')
+  // console.log(productList);
   return store.depositProducts.filter((ele) => {
     return productList.find((product) => product === ele.fin_prdt_cd)
   })

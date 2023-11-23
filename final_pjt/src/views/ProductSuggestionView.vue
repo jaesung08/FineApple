@@ -35,15 +35,18 @@ const store = useCounterStore();
 const userMbti = ref(store.userData.mbti)
 console.log(userMbti.value);
 
+
+const productList = store.getProductByMbti()
+
 const depositList = computed(() => {
-  const productList = store.userData.financial_products.split(',')
+  const productList = store.recommendedProduct
   return store.depositProducts.filter((ele) => {
     return productList.find((product) => product === ele.fin_prdt_cd)
   })
 })
 
 const savingList = computed(() => {
-  const productList = store.userData.financial_products.split(',')
+  const productList = store.recommendedProduct
   return store.savingProducts.filter((ele) => {
     return productList.find((product) => product === ele.fin_prdt_cd)
   })
