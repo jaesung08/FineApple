@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import User
-from .serializers import UserProfileEditSerializer, UserFinancialEditSerializer
+from .serializers import UserProfileEditSerializer, UserFinancialEditSerializer, UserFinancialMBTIEditSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 
@@ -71,6 +71,23 @@ def user_financial_edit(request):
 
     return Response({"message": "Invalid request method"}, status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def user_mbti_edit(request):
+    user = get_object_or_404(User, username=request.user.username)
+    if request.method == 'PUT':
+        if user.mbti != []:
+            user.mbti = ''
+            user.save()
+        print(request.data)
+        serializer = UserFinancialMBTIEditSerializer(instance=user, data=request.data)
+        # serializer = UserFinancialMBTIEditSerializer(instance=user, data={'mbti': user.mbti}, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            # print('2', serializer.data.mbti)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

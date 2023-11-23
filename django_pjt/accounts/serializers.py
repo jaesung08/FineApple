@@ -64,7 +64,10 @@ class UserFinancialEditSerializer(serializers.ModelSerializer):
         model = User
         fields = ['financial_products']
 
-
+class UserFinancialMBTIEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['mbti']
 
 
 from django.contrib.auth import authenticate, get_user_model
