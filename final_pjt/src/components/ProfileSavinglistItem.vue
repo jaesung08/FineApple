@@ -87,7 +87,11 @@
     idx: Number
   })
 
-const showDetails2 = ref(product.item.fin_prdt_cd in store.wantProducts)
+const showDetails2 = ref(false)
+
+showDetails2.value = Array.from(store.wantProducts).find((ele) => {
+  return ele === product.item.fin_prdt_cd
+})
 
 const handleButtonClick =  () => {
   if (!showDetails2.value) {

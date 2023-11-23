@@ -2,7 +2,7 @@
 
 <template>
   <div class="calculator-container">
-    <h1 class="calculator-title">환율 계산기</h1>
+    <h1 class="calculator-title">환율 계산기2</h1>
 
     <div class="form-group">
       <label for="exchangeRate">환율 선택:</label>

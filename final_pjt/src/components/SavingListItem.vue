@@ -109,6 +109,7 @@
               <td class="td1">최고한도</td>
               <td>{{ item.max_limit }}</td>
             </tr>
+            <button @click="handleButtonClick">{{ showDetails2 ? '해지하기' : '가입하기' }}</button>
           </table>
         </td>
       </tr>

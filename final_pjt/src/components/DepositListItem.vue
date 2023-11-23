@@ -100,19 +100,7 @@
               <td>{{ item.max_limit }}</td>
             </tr>
           </table>
-        </td>
-      </tr>
-
-      <tr v-if="showDetails">
-        <td></td>
-        <td class="details">
-          {{ item.etc_note }}
-          {{ item.join_deny }}
-          {{ item.join_member }}
-          {{ item.join_way }}
-          {{ item.spcl_cnd }}
-          {{ item.mtrt_int }}
-          {{ item.max_limit }}
+          <button @click="handleButtonClick">{{ showDetails2 ? '해지하기' : '가입하기' }}</button>
         </td>
       </tr>
     </table>

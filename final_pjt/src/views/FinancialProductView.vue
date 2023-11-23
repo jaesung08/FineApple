@@ -34,10 +34,22 @@
       </div>
       <button type="submit" class="submit-button">찾기</button>
     </form>
-
-    <div class="table-container">
+    <table class="styled-table">
+       <thead>
+    <tr>
+      <th>ID</th>
+      <th>Bank</th>
+      <th>Product</th>
+      <th>6개월</th>
+      <th>12개월</th>
+      <th>24개월</th>
+      <th>36개월</th>
+    </tr>
+  </thead>
+</table>
+    <div class="table-container" v-for="item in filteredDepositList">
       <table class="styled-table">
-        <tr v-for="item in filteredDepositList">
+        <tr >
           <td class="label">
             {{ item.id }}
           </td>
@@ -109,9 +121,129 @@
             </p>
           </td>
         </tr>
+        <tr v-if="showDetails">
+        <td colspan="12">
+          <table class="details-table">
+            <tr>
+              <td class="td1">금융상품설명</td>
+              <td>{{ item.etc_note }}</td>
+            </tr>
+            <tr>
+              <td class="td1">가입제한</td>
+              <td>
+                <span v-if="item.join_deny === 1">제한 없음</span>
+                <span v-else-if="item.join_deny === 2">서민전용</span>
+                <span v-else-if="item.join_deny === 3">일부제한</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="td1">가입대상</td>
+              <td>{{ item.join_member }}</td>
+            </tr>
+            <tr>
+              <td class="td1">가입방법</td>
+              <td>{{ item.join_way }}</td>
+            </tr>
+            <tr>
+              <td class="td1">우대조건</td>
+              <td>{{ item.spcl_cnd }}</td>
+            </tr>
+            <tr>
+              <td class="td1">만기 후 이자율</td>
+              <td>{{ item.mtrt_int }}</td>
+            </tr>
+            <tr>
+              <td class="td1">최고한도</td>
+              <td>{{ item.max_limit }}</td>
+            </tr>
+          </table>
+          <button @click="handleButtonClick">{{ showDetails2 ? '해지하기' : '가입하기' }}</button>
+        </td>
+      </tr>
       </table>
+
+
+      
+
+       <table class="styled-table">
+        <tr v-for="item in filteredSavingList">
+          <td class="label">
+            {{ item.id }}
+          </td>
+          <td class="bank">
+            {{ item.kor_co_nm }}
+          </td>
+          <td class="product">
+            <span @click="toggleDetails">{{ item.fin_prdt_nm }}</span>
+          </td>
+
+          <td class="option1">
+            <p>
+              {{
+                options2
+                  .filter((option) => option.fin_prdt_cd === item.fin_prdt_cd)
+                  .filter((option) => option.save_trm === 6)[0]
+                  ? options2
+                      .filter(
+                        (option) => option.fin_prdt_cd === item.fin_prdt_cd
+                      )
+                      .filter((option) => option.save_trm === 6)[0].intr_rate
+                  : "-"
+              }}
+            </p>
+          </td>
+          <td class="option2">
+            <p>
+              {{
+                options2
+                  .filter((option) => option.fin_prdt_cd === item.fin_prdt_cd)
+                  .filter((option) => option.save_trm === 12)[0]
+                  ? options2
+                      .filter(
+                        (option) => option.fin_prdt_cd === item.fin_prdt_cd
+                      )
+                      .filter((option) => option.save_trm === 12)[0].intr_rate
+                  : "-"
+              }}
+            </p>
+          </td>
+          <td class="option3">
+            <p>
+              {{
+                options2
+                  .filter((option) => option.fin_prdt_cd === item.fin_prdt_cd)
+                  .filter((option) => option.save_trm === 24)[0]
+                  ? options2
+                      .filter(
+                        (option) => option.fin_prdt_cd === item.fin_prdt_cd
+                      )
+                      .filter((option) => option.save_trm === 24)[0].intr_rate
+                  : "-"
+              }}
+            </p>
+          </td>
+          <td class="option4">
+            <p>
+              {{
+                options2
+                  .filter((option) => option.fin_prdt_cd === item.fin_prdt_cd)
+                  .filter((option) => option.save_trm === 36)[0]
+                  ? options2
+                      .filter(
+                        (option) => option.fin_prdt_cd === item.fin_prdt_cd
+                      )
+                      .filter((option) => option.save_trm === 36)[0].intr_rate
+                  : "-"
+              }}
+            </p>
+          </td>
+        </tr>
+      </table>
+
+      
       <tr v-if="showDetails">
         <td colspan="12">
+          
           <table class="details-table">
             <tr>
               <td class="td1">금융상품설명</td>
@@ -141,9 +273,13 @@
               <td class="td1">최고한도</td>
               <td>{{ item.max_limit }}</td>
             </tr>
+            
           </table>
+
         </td>
       </tr>
+      
+
     </div>
     <div class="box-container">
       <div class="box deposit-box">
@@ -174,6 +310,7 @@ const store = useCounterStore();
 const filteredDepositList = ref([]);
 const filteredSavingList = ref([]);
 
+
 const bank = ref(null);
 const term = ref(null);
 
@@ -181,27 +318,44 @@ onMounted(() => {
   store.getDepositProducts();
   store.getSavingProducts();
 });
-defineProps({
-  item: Object,
-});
+// defineProps({
+//   item: Object,
+// });
 const filterData = (data) => {
-  console.log(data);
   const data2 = data.filter((d) => d.kor_co_nm === bank.value);
-  // // const data3 = data2.filter(
-  // //   (d) =>
-  // //     d.fin_prdt_cd === options.fin_prdt_cd &&
-  // //     options.save_trm === term.value
-  // // );
-  // console.log(data3);
-  // return data3;
   return data2;
 };
 
+
+const filterData2 = (data, options) => {
+  // term 필터링
+  const optionList = options.value.filter((option) => {
+    return option.save_trm === Number(term.value)
+  })
+  
+  // product 안에 위에서 걸러준 option 이 있으면 반환
+  const tmp2 = data.filter((product) => {
+    const findProduct = optionList.find((ele) => {
+      return product.fin_prdt_cd === ele.fin_prdt_cd
+    })
+    if(findProduct) return true
+  })
+
+  console.log('tmp2 =', tmp2);
+
+  return tmp2
+
+
+}
+
 const filterLists = () => {
   // 선택된 은행과 예치기간에 따라 필터링
-  filteredDepositList.value = filterData(store.depositProducts);
-  filteredSavingList.value = filterData(store.savingProducts);
+  filteredDepositList.value = filterData2(filterData(store.depositProducts), options);
+  filteredSavingList.value = filterData2(filterData(store.savingProducts), options2);
 };
+
+console.log(filteredDepositList.value)
+console.log(filteredSavingList.value)
 
 const handleSubmit = () => {
   // 선택된 값에 따라 DepositList와 SavingList 필터링
@@ -216,9 +370,20 @@ const toggleDetails = () => {
 
 const options = ref([]);
 options.value = store.depositProductsOptions;
+
+const options2 = ref([])
+options2.value = store.savingProductsOptions;
+
+
 </script>
 
 <style scoped>
+  .styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: auto;
+    max-width: 1000px;
+  }
 .container {
   display: flex;
   flex-direction: column;
@@ -313,7 +478,7 @@ options.value = store.depositProductsOptions;
   color: rgb(0, 75, 76); /* Accent color on hover */
 }
 .table-container {
-  max-width: 600px;
+  max-width: 1000px;
   margin: auto;
 }
 
@@ -321,6 +486,7 @@ options.value = store.depositProductsOptions;
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
+  background-color: white;
 }
 
 .styled-table tr {
@@ -370,4 +536,6 @@ options.value = store.depositProductsOptions;
   font-weight: bold;
   width: 30%;
 }
+
+
 </style>

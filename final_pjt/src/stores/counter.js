@@ -28,7 +28,7 @@ export const useCounterStore = defineStore('counter', () => {
         saving_possible_money,
         name,
         saving_possible_period,
-     , financial_type } = payload;
+        financial_type } = payload;
 
       axios({
         method: "post",
@@ -65,7 +65,8 @@ export const useCounterStore = defineStore('counter', () => {
           age,
           money,
           saving_possible_money,
-          saving_possible_period,, financial_type
+          saving_possible_period, 
+          financial_type
         },
         headers: {
           Authorization: `Token ${token.value}`,

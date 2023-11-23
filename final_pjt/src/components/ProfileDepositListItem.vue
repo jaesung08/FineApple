@@ -87,33 +87,33 @@
   // console.log('11', product.item.fin_prdt_cd);
   
   
-  const showDetails2 = ref(product.item.fin_prdt_cd in store.wantProducts)
+  const showDetails2 = ref(false)
 
-  console.log(product.idx)
+showDetails2.value = Array.from(store.wantProducts).find((ele) => {
+  return ele === product.item.fin_prdt_cd
+})
 
-  // console.log('1', product.item);
-  // console.log('2',showDetails2);
-  const handleButtonClick =  () => {
-    if (!showDetails2.value) {
-      // 해지하기 버튼을 눌렀을 때의 동작
-      // product에 해당 상품에 대한 정보를 넣어주고, 요청을 다시 보내고, 버튼을 '가입하기'로 변경하는 로직 추가
-      store.updateFinancial(product.item.fin_prdt_cd)
-      store.wantProducts.push(product.item.fin_prdt_cd)
-      console.log("상품 추가 완")
-      console.log(store.wantProducts);
-      showDetails2.value = !showDetails2.value
-    } else {
-      // 가입하기 버튼을 눌렀을 때의 동작
-      // product에 해당 상품에 대한 정보를 넣어주고, 해당 함수가 작동하게 해주고, 버튼을 '해지하기'로 변경하는 로직 추가
-       store.updateFinancial(product.item.fin_prdt_cd)
-       const index = store.wantProducts.indexOf(product.item.fin_prdt_cd)
-      // store.wantProducts.push(product.item.fin_prdt_cd)
-       store.wantProducts.splice(index, 1)
-       console.log("상품 제거 완")
-       console.log(store.wantProducts);
-       showDetails2.value = !showDetails2.value
-    }
+const handleButtonClick =  () => {
+  if (!showDetails2.value) {
+    // 해지하기 버튼을 눌렀을 때의 동작
+    // product에 해당 상품에 대한 정보를 넣어주고, 요청을 다시 보내고, 버튼을 '가입하기'로 변경하는 로직 추가
+    store.updateFinancial(product.item.fin_prdt_cd);
+    store.wantProducts.push(product.item.fin_prdt_cd);
+    console.log("상품 추가 완");
+    
+    showDetails2.value = !showDetails2.value;
+  } else {
+    // 가입하기 버튼을 눌렀을 때의 동작
+    // product에 해당 상품에 대한 정보를 넣어주고, 해당 함수가 작동하게 해주고, 버튼을 '해지하기'로 변경하는 로직 추가
+    store.updateFinancial(product.item.fin_prdt_cd);
+    const index = store.wantProducts.indexOf(product.item.fin_prdt_cd);
+    // store.wantProducts.push(product.item.fin_prdt_cd)
+    store.wantProducts.splice(index, 1);
+    console.log("상품 제거 완");
+    console.log(store.wantProducts);
+    showDetails2.value = !showDetails2.value;
   }
+};
   
   </script>
   
