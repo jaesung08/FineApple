@@ -53,21 +53,23 @@ def save_products(request):
 
     # return Response(response)
     for li in response.get("result").get("baseList"):
-        SavingData = {
-            'fin_prdt_cd' : li.get('fin_prdt_cd'),
-            'kor_co_nm' : li.get('kor_co_nm'),
-            'fin_prdt_nm' : li.get('fin_prdt_nm'),
-            'etc_note' : li.get('etc_note'),
-            'join_deny' : li.get('join_deny'),
-            'join_member' : li.get('join_member'),
-            'join_way' : li.get('join_way'),
-            'spcl_cnd' : li.get('spcl_cnd'),
-            'mtrt_int' : li.get('mtrt_int'),    
-            'max_limit' : li.get('max_limit'),
-        }
-        serializer = DepositProductsSerializer(data=SavingData)
-        if serializer.is_valid():   # raise_exception=True
-            serializer.save()
+        fin_prdt_cd = li.get('fin_prdt_cd')
+        if not DepositProducts.objects.filter(fin_prdt_cd=fin_prdt_cd).exists():
+            SavingData = {
+                'fin_prdt_cd' : li.get('fin_prdt_cd'),
+                'kor_co_nm' : li.get('kor_co_nm'),
+                'fin_prdt_nm' : li.get('fin_prdt_nm'),
+                'etc_note' : li.get('etc_note'),
+                'join_deny' : li.get('join_deny'),
+                'join_member' : li.get('join_member'),
+                'join_way' : li.get('join_way'),
+                'spcl_cnd' : li.get('spcl_cnd'),
+                'mtrt_int' : li.get('mtrt_int'),    
+                'max_limit' : li.get('max_limit'),
+            }
+            serializer = DepositProductsSerializer(data=SavingData)
+            if serializer.is_valid():   # raise_exception=True
+                serializer.save()
 
     
 
@@ -102,21 +104,24 @@ def save_products(request):
     }
     response = requests.get(url, params=params).json()
     for li in response.get("result").get("baseList"):
-        SavingData = {
-            'fin_prdt_cd' : li.get('fin_prdt_cd'),
-            'kor_co_nm' : li.get('kor_co_nm'),
-            'fin_prdt_nm' : li.get('fin_prdt_nm'),
-            'etc_note' : li.get('etc_note'),
-            'join_deny' : li.get('join_deny'),
-            'join_member' : li.get('join_member'),
-            'join_way' : li.get('join_way'),
-            'spcl_cnd' : li.get('spcl_cnd'),
-            'mtrt_int' : li.get('mtrt_int'),    
-            'max_limit' : li.get('max_limit'),
-        }
-        serializer = SavingProductsSerializer(data=SavingData)
-        if serializer.is_valid():   # raise_exception=True
-            serializer.save()
+        fin_prdt_cd = li.get('fin_prdt_cd')
+        # Check if the entry already exists in DepositProducts
+        if not DepositProducts.objects.filter(fin_prdt_cd=fin_prdt_cd).exists():
+            SavingData = {
+                'fin_prdt_cd' : li.get('fin_prdt_cd'),
+                'kor_co_nm' : li.get('kor_co_nm'),
+                'fin_prdt_nm' : li.get('fin_prdt_nm'),
+                'etc_note' : li.get('etc_note'),
+                'join_deny' : li.get('join_deny'),
+                'join_member' : li.get('join_member'),
+                'join_way' : li.get('join_way'),
+                'spcl_cnd' : li.get('spcl_cnd'),
+                'mtrt_int' : li.get('mtrt_int'),    
+                'max_limit' : li.get('max_limit'),
+            }
+            serializer = SavingProductsSerializer(data=SavingData)
+            if serializer.is_valid():   # raise_exception=True
+                serializer.save()
 
     
 
@@ -144,17 +149,41 @@ def save_products(request):
 
 
 ## DB에 저장된 상품 리스트 출력
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def deposit_products(request):
-    deposit_products = DepositProducts.objects.all()
-    serializer = DepositProductsSerializer(deposit_products, many=True)
-    return Response(serializer.data)
+    deposit_product = get_list_or_404(DepositProducts)
+    serializer1 = DepositProductsSerializer(deposit_product, many=True)
+    
+    product =  get_list_or_404(DepositOptions)
+    serializer2 = DepositOptionsSerializer(product, many= True)
+    
+    response_data = {
+        'deposit_product' : serializer1.data,
+        'deposit_product_options' : serializer2.data,
+    }
+    return Response(response_data)
+# def deposit_products(request):
+#     deposit_products = DepositProducts.objects.all()
+#     serializer = DepositProductsSerializer(deposit_products, many=True)
+#     return Response(serializer.data)
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def saving_products(request):
-    saving_products = SavingProducts.objects.all()
-    serializer = SavingProductsSerializer(saving_products, many=True)
-    return Response(serializer.data)
+    saving_product = get_list_or_404(SavingProducts)
+    serializer1 = SavingProductsSerializer(saving_product, many=True)
+    
+    product =  get_list_or_404(SavingOptions)
+    serializer2 = SavingOptionsSerializer(product, many= True)
+    
+    response_data = {
+        'saving_product' : serializer1.data,
+        'saving_product_options' : serializer2.data,
+    }
+    return Response(response_data)
+# def saving_products(request):
+#     saving_products = SavingProducts.objects.all()
+#     serializer = SavingProductsSerializer(saving_products, many=True)
+#     return Response(serializer.data)
 
 
 ## DB에 저장된 상품의 옵션 리스트 출력

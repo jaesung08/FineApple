@@ -4,12 +4,22 @@ from allauth.account.adapter import DefaultAccountAdapter
 
 # Create your models here.
 class User(AbstractUser):
-    nickname = models.TextField()
-    age = models.IntegerField(blank=True, null=True)
-    money = models.IntegerField(blank=True, null=True)
-    salary = models.IntegerField(blank=True, null=True)
+    예금 = '예금'
+    적금 = '적금'
+    FINANCIAL_CHOICES = [
+        (예금, '예금'),
+        (적금, '적금'),
+    ]
+    name = models.TextField(blank=False)    # 이름
+    age = models.IntegerField(blank=True, null=True)    # 나이
+    money = models.IntegerField(blank=True, null=True)  # 보유자산
+    saving_possible_money = models.IntegerField(blank=True, null=True)  # 매달 저축 가능 금액
+    saving_possible_period = models.IntegerField(blank=True, null=True)  # 추가: 저축 가능 기간
+    financial_type = models.CharField(max_length=2, choices=FINANCIAL_CHOICES, blank=True, default=None, ) # 추가: 예적금 중 희망 
+    mbti = models.CharField(max_length=4, blank=True, null=True)  # 추가: MBTI
     # 리스트 데이터 저장을 위해 Text 형태로 저장
     financial_products = models.TextField(blank=True, null=True)
+    
     
     # # superuser fields
     # is_active = models.BooleanField(default=True)
@@ -26,28 +36,34 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         from allauth.account.utils import user_email, user_field, user_username
         # 기존 코드를 참고하여 새로운 필드들을 작성해줍니다.
         data = form.cleaned_data
-        first_name = data.get("first_name")
-        last_name = data.get("last_name")
+        email = data.get("email")
         username = data.get("username")
-        nickname = data.get("nickname")
+        name = data.get("name")
         age = data.get("age")
         money = data.get("money")
-        salary = data.get("salary")
+        saving_possible_money = data.get("saving_possible_money")
+        saving_possible_period = data.get("saving_possible_period")
+        financial_type = data.get("financial_type")
+        mbti = data.get("mbti")
         financial_products = data.get("financial_products")
         
         user_username(user, username)
-        if first_name:
-            user_field(user, "first_name", first_name)
-        if last_name:
-            user_field(user, "last_name", last_name)
-        if nickname:
-            user_field(user, "nickname", nickname)
+        if email:
+            user_email(user, "email", email)
+        if name:
+            user_field(user, "name", name)
         if age:
             user.age = age
         if money:
             user.money = money
-        if salary:
-            user.salary = salary
+        if saving_possible_money:
+            user.saving_possible_money = saving_possible_money
+        if saving_possible_period:
+            user.saving_possible_period = saving_possible_period
+        if financial_type:
+            user.financial_type = financial_type
+        if mbti:
+            user.mbti = mbti
         if financial_products:
             user_field(user, "financial_products", financial_products)
         if "password1" in data:

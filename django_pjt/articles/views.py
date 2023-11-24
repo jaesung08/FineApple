@@ -9,12 +9,13 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 ## 좋아요
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def like_post(request, article_pk):
+    print(1)
     article = Article.objects.get(pk=article_pk)
+    print(article)
     user = request.user
-    
     if article.likes.filter(username=user).exists():
         article.likes.remove(user)
         return Response({"message": "Liked remove successfully"}, status=status.HTTP_201_CREATED)
@@ -23,7 +24,7 @@ def like_post(request, article_pk):
         return Response({"message": "Article liked successfully"}, status=status.HTTP_201_CREATED)
     
 ## 댓글 작성 및 조회
-@api_view(['GET', 'POST', 'DELETE'])
+@api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def comment_list(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
@@ -33,11 +34,7 @@ def comment_list(request, article_pk):
         
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
-    
-    elif request.method == 'DELETE':
-        
-        comments.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
     
     elif request.method == 'POST':
         serializer = CommentSerializer(data=request.data)
@@ -47,6 +44,14 @@ def comment_list(request, article_pk):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticatedOrReadOnly])
+def comment_delete(request, article_pk, comment_pk):
+    article = get_object_or_404(Article, pk=article_pk)
+    comment = Comment.objects.filter(article=article, pk=comment_pk)
+    if request.method == 'DELETE':
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 ## 게시글 리스트 및 게시글 detail
@@ -61,11 +66,9 @@ def article_list(request):
 
     
     elif request.method == 'POST':
-        # authentication_classes = [BasicAuthentication, SessionAuthentication]
-        # # permission 추가
-        # permission_classes = [IsAuthenticatedOrReadOnly]
         serializer = ArticleSerializer(data=request.data)
-        if serializer.is_valid():
+        
+        if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
