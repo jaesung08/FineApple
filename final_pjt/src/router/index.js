@@ -133,7 +133,7 @@ const router = createRouter({
 router.beforeEach((to, from) => {
   const store = useCounterStore();
   if (
-    (to.name === "CreateView" || to.name === "ProfileView" || to.name === "ProductSuggestionView" || to.name === "test-test") &&
+    (to.name === "CreateView" || to.name === "ProfileView" || to.name === "ProductSuggestionView" || to.name === "test-test" || to.name === "AddCommentView") &&
     !store.isLogin
   ) {
     window.alert("로그인이 필요합니다.");

@@ -1,5 +1,11 @@
 <template>
+  <div>
+    &nbsp;
+  </div>
   <h1>예금 리스트</h1>
+  <div>
+    &nbsp;
+  </div>
     <table class="styled-table">
         <thead>
       <tr>
@@ -56,6 +62,12 @@
   
   
   <style>
+  h1{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
     .table-container {
       max-width: 1000px;
       margin: auto;

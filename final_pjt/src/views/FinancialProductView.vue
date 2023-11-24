@@ -1,5 +1,8 @@
 
 <template>
+  <div>
+    &nbsp;
+  </div>
   <div class="container">
     <h1>내 조건에 맞는 상품 찾기</h1>
     <div class="box-container">
@@ -406,7 +409,7 @@ options2.value = store.savingProductsOptions;
   margin: 100px 20px 100px 0px;
   padding: 10px 10px 150px 10px;
   border-radius: 0px 5px 5px 0px;  */
-  position: fixed;
+  /* position: fixed; */
   right: 23%;
   display: flex;
   /*top: 2%;

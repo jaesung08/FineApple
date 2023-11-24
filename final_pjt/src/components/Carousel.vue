@@ -136,6 +136,7 @@ const moveProduct = () => {
   /* align-items: center;  */
 }
 
+
 .carousel {
   position: relative;
   width: 100%;

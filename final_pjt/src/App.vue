@@ -49,6 +49,10 @@ const logOut = store.logOut;
 </script>
 
 <style>
+template{
+  /* font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; */
+}
+
 #fineapple {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 600;
@@ -75,7 +79,8 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: "Courier New", Courier, monospace;
+  /* font-family: "Courier New", Courier, monospace; */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .auth-buttons {
